@@ -27,7 +27,7 @@ So the AI is framed as a hypothesis generator, not an authority. Its language st
 1. **Capture.** Describe what happened, when, and optionally its context. If the feeling is hard to name, the Mood Meter lets you locate it on pleasure and energy instead.
 2. **Interpret.** A margin note proposes a possible emotion, possible trigger, intensity and a short observation.
 3. **Confirm.** You answer *Feels accurate*, *Partly accurate* or *Not how I see it*. Every label stays editable, and you can add your own words.
-4. **Compare.** The Patterns view looks across entries for possible recurring relationships.
+4. **Compare.** The Patterns view looks across entries for possible recurring relationships. It also keeps the original prototype's two visualisations, rebuilt in D3: a monthly calendar where each day is a set of concentric ink-blot rings (one per entry), and a daily view that places each entry in a two-hour column by how pleasant it felt.
 5. **Reflect.** Instead of reassurance, each entry ends with one specific question to sit with.
 
 ## AI concept architecture

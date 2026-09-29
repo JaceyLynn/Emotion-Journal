@@ -7,7 +7,7 @@
   <meta name="description" content="An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -179,9 +179,22 @@
       <section class="charts" aria-labelledby="charts-title">
         <h2 class="section-title" id="charts-title">Across your entries</h2>
         <div class="legend" id="legend"></div>
-        <figure class="chart">
-          <figcaption>Intensity over time</figcaption>
-          <div id="chart-intensity" class="chart-body"></div>
+        <figure class="chart chart-calendar">
+          <div class="chart-head">
+            <figcaption>Monthly mood</figcaption>
+            <div class="month-nav">
+              <button type="button" id="prev-month" aria-label="Previous month">←</button>
+              <span id="month-label" aria-live="polite"></span>
+              <button type="button" id="next-month" aria-label="Next month">→</button>
+            </div>
+          </div>
+          <div id="chart-calendar" class="chart-body"></div>
+          <p class="chart-note">Each ring is one entry, the day’s first entry on the outside. Select a day to see it hour by hour.</p>
+        </figure>
+        <figure class="chart chart-day">
+          <figcaption id="day-label">Daily mood</figcaption>
+          <div id="chart-day" class="chart-body"></div>
+          <p class="chart-note">Higher dots were more pleasant. Select one to open the entry.</p>
         </figure>
         <div class="chart-row">
           <figure class="chart">

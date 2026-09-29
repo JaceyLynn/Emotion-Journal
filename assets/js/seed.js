@@ -56,7 +56,22 @@ EJ.seed = (function () {
       override: { trigger: 'changing_expectations' },
       note: 'It’s about losing control of my own schedule, not just the change.',
       question: 'Was the strongest part of the frustration the change itself, or not having enough time to adjust?',
-      text: 'My manager changed the plan again today after I had already organized my schedule around what we agreed on. I was more upset than I expected.' }
+      text: 'My manager changed the plan again today after I had already organized my schedule around what we agreed on. I was more upset than I expected.' },
+    // A few second and third entries on the same day, so the calendar's
+    // concentric rings have something to show.
+    { d: 30, h: 19, category: 'Family', accuracy: 'accurate', intensity: 'Moderate',
+      text: 'Called my mom on the way home. She told her favourite story about the dog and I laughed anyway.' },
+    { d: 22, h: 20, category: 'Leisure', accuracy: 'accurate', intensity: 'Low',
+      text: 'Quiet evening. Cooked something slow and read for an hour. Settled.' },
+    { d: 12, h: 9, category: 'Work', accuracy: 'accurate', intensity: 'Moderate',
+      text: 'Finished the draft I have been avoiding for days. Relieved it is over with.' },
+    { d: 4, h: 20, category: 'Relationships', accuracy: 'accurate', intensity: 'Moderate',
+      text: 'Dinner with friends after the presentation. Grateful for people who ask how things went.' },
+    { d: 2, h: 9, category: 'Health', accuracy: 'accurate', intensity: 'Low',
+      text: 'Slow walk before work, the sun was out. Felt calm.' },
+    { d: 2, h: 21, category: 'Family', accuracy: 'partly', intensity: 'Moderate',
+      note: 'Lighter, not fully relieved yet.',
+      text: 'Talked it through with my sister and felt a bit lighter. Relieved I said something.' }
   ];
 
   function build() {
