@@ -1,7 +1,7 @@
 /*
- * History view: every entry with the user's confirmed reading. Where the
- * user corrected the journal's reading, the original suggestion is shown
- * alongside. Any entry can collect follow-ups written later.
+ * History view. Each entry shows, in order: the original entry with its
+ * tags; when opened, the follow-ups written later; and last a reflective
+ * question with a nudge toward related entries.
  */
 window.EJ = window.EJ || {};
 EJ.views = EJ.views || {};
@@ -13,76 +13,89 @@ EJ.views.history = (function () {
   let filter = null;
   let expanded = false;
 
-  const ACCURACY = {
-    accurate: 'You said the reading felt accurate.',
-    partly: 'You said the reading was partly accurate, and revised it.',
-    not: 'You said this was not how you saw it, and rewrote it.'
-  };
-
-  function revised(e) {
-    return e.accuracy !== 'accurate' ||
-      e.suggested.emotion !== e.confirmed.emotion ||
-      e.suggested.trigger !== e.confirmed.trigger;
+  function chip(label, mark) {
+    return `<span class="chip"${mark ? ` style="--mark:${mark}"` : ''}>${mark ? '<span class="mark" aria-hidden="true"></span>' : ''}${u.esc(label)}</span>`;
   }
 
+  function emotionOptions(selected) {
+    return '<option value="">Not sure</option>' + Object.entries(EJ.EMOTIONS)
+      .map(([k, em]) => `<option value="${k}"${k === selected ? ' selected' : ''}>${u.esc(em.label)}</option>`).join('');
+  }
+
+  // Open part 1: follow-ups written after the original entry.
   function followUps(e) {
     const list = (e.followUps || []).slice().sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     return `
-      <div class="followups">
+      <section class="followups" aria-label="Follow-ups">
         <p class="note-label">Follow-ups</p>
         ${list.length ? `<ol class="followup-list">${list.map((f) => `
           <li>
-            <span class="followup-date">${u.esc(u.formatShort(f.createdAt))}, ${u.esc(u.formatTime(f.createdAt))}</span>
+            <div class="chips">
+              ${chip(u.formatShort(f.createdAt) + ', ' + u.formatTime(f.createdAt))}
+              ${f.emotion ? chip(u.emotionLabel(f.emotion), u.emotionColor(f.emotion)) : ''}
+            </div>
             <p>${u.esc(f.text)}</p>
           </li>`).join('')}</ol>` : '<p class="muted small">Nothing added yet. What happened next, or how does it look now?</p>'}
-        <label class="sr-only" for="fu-${u.esc(e.id)}">Write a follow-up</label>
-        <textarea id="fu-${u.esc(e.id)}" rows="2" placeholder="Write a follow-up…"></textarea>
-        <button type="button" class="btn btn-small btn-primary" data-add-followup="${u.esc(e.id)}">Add follow-up</button>
-      </div>`;
+        <div class="followup-form">
+          <label class="sr-only" for="fu-${u.esc(e.id)}">Write a follow-up</label>
+          <textarea id="fu-${u.esc(e.id)}" rows="2" placeholder="Write a follow-up…"></textarea>
+          <label class="followup-feel">
+            <span>How does it feel now?</span>
+            <select id="fu-emotion-${u.esc(e.id)}">${emotionOptions('')}</select>
+          </label>
+          <button type="button" class="btn btn-small btn-primary" data-add-followup="${u.esc(e.id)}">Add follow-up</button>
+        </div>
+      </section>`;
   }
 
-  function item(e) {
+  // Open part 2: the reflective question, plus a nudge toward related entries.
+  function reflection(e, all) {
     const c = e.confirmed;
-    const s = e.suggested;
-    const color = u.emotionColor(c.emotion);
-    const meta = [u.triggerLabel(c.trigger), c.intensity, e.category].filter(Boolean).map(u.esc).join(' · ');
+    let related = '';
+    const sameTrigger = c.trigger ? all.filter((x) => x.id !== e.id && x.confirmed.trigger === c.trigger).length : 0;
+    const sameEmotion = c.emotion ? all.filter((x) => x.id !== e.id && x.confirmed.emotion === c.emotion).length : 0;
+    if (sameTrigger) {
+      related = `This is one of ${sameTrigger + 1} entries about ${u.esc(u.triggerLabel(c.trigger).toLowerCase())}. Does it remind you of any of the others?`;
+    } else if (sameEmotion) {
+      related = `You have felt ${u.esc(u.emotionLabel(c.emotion).toLowerCase())} in ${sameEmotion} other ${sameEmotion > 1 ? 'entries' : 'entry'}. Was it about something similar?`;
+    }
+    return `
+      <section class="entry-reflection" aria-label="Reflection">
+        <p class="note-label">Reflect</p>
+        <p class="reflection-q small-q">${u.esc(e.reflection.question)}</p>
+        ${e.reflection.answer ? `<p class="reflection-a">${u.esc(e.reflection.answer)}</p>` : ''}
+        ${related ? `<p class="related">${related} <a href="#patterns">See patterns</a></p>` : ''}
+      </section>`;
+  }
+
+  function item(e, all) {
+    const c = e.confirmed;
     const nFollow = (e.followUps || []).length;
 
-    const original = revised(e) ? `
-      <div class="ai-original">
-        <p class="note-label">The journal first suggested</p>
-        <p>${u.esc(u.emotionLabel(s.emotion))} · ${u.esc(u.triggerLabel(s.trigger))} · ${u.esc(s.intensity)}</p>
-        <p class="noticed">${u.esc(s.observation)}</p>
-      </div>` : `
-      <div class="ai-original">
-        <p class="note-label">What the journal noticed</p>
-        <p class="noticed">${u.esc(s.observation)}</p>
-      </div>`;
-
     return `
-      <li class="entry" id="entry-${u.esc(e.id)}" style="--mark:${color}">
+      <li class="entry" id="entry-${u.esc(e.id)}" style="--mark:${u.emotionColor(c.emotion)}">
         <div class="entry-date">
           <span class="entry-day">${u.esc(u.formatShort(e.eventTime))}</span>
           <span class="entry-time">${u.esc(u.formatTime(e.eventTime))}</span>
         </div>
         <details class="entry-body">
           <summary>
-            <span class="entry-emotion"><span class="mark" aria-hidden="true"></span>${u.esc(u.emotionLabel(c.emotion))}${revised(e) ? '<span class="tag">revised by you</span>' : ''}${nFollow ? `<span class="tag tag-followup">↳ ${nFollow} follow-up${nFollow > 1 ? 's' : ''}</span>` : ''}<span class="followup-pill" data-followup-open>↳ Follow up</span></span>
             <span class="entry-text-preview">${u.esc(e.text)}</span>
-            <span class="entry-meta-line">${meta}</span>
+            ${c.note ? `<span class="you-wrote"><span class="note-label">You wrote</span> ${u.esc(c.note)}</span>` : ''}
+            <span class="chips">
+              ${chip(u.emotionLabel(c.emotion), u.emotionColor(c.emotion))}
+              ${c.trigger ? chip(u.triggerLabel(c.trigger)) : ''}
+              ${c.intensity ? chip(c.intensity) : ''}
+              ${e.category ? chip(e.category) : ''}
+              ${nFollow ? `<span class="chip chip-followup">↳ ${nFollow} follow-up${nFollow > 1 ? 's' : ''}</span>` : ''}
+              <span class="followup-pill" data-followup-open>↳ Follow up</span>
+            </span>
           </summary>
           <div class="entry-detail">
-            <p class="muted small">${ACCURACY[e.accuracy] || ''}</p>
-            ${c.note ? `<blockquote class="your-words"><p class="note-label">In your words</p><p>${u.esc(c.note)}</p></blockquote>` : ''}
-            ${original}
-            <div class="entry-reflection">
-              <p class="note-label">Reflection</p>
-              <p class="reflection-q small-q">${u.esc(e.reflection.question)}</p>
-              ${e.reflection.answer ? `<p>${u.esc(e.reflection.answer)}</p>` : '<p class="muted">Left as a question.</p>'}
-            </div>
             ${followUps(e)}
+            ${reflection(e, all)}
             <div class="entry-actions">
-              <button type="button" class="btn btn-small" data-edit-entry="${u.esc(e.id)}">Revisit or edit</button>
+              <button type="button" class="btn btn-small" data-edit-entry="${u.esc(e.id)}">Edit entry</button>
               <button type="button" class="btn btn-small btn-quiet" data-delete="${u.esc(e.id)}">Delete</button>
             </div>
           </div>
@@ -104,7 +117,7 @@ EJ.views.history = (function () {
     if (openId) expanded = true;
     const shown = expanded ? list : list.slice(0, PREVIEW);
     const more = list.length - shown.length;
-    $('entries').innerHTML = (list.length ? shown.map(item).join('') :
+    $('entries').innerHTML = (list.length ? shown.map((e) => item(e, all)).join('') :
       '<li class="empty">Nothing here yet. <a href="#journal">Start an entry</a>.</li>') +
       (more > 0 ? `<li class="show-all"><button type="button" class="btn" data-show-all>Show all ${list.length} entries</button></li>` : '');
 
@@ -146,7 +159,8 @@ EJ.views.history = (function () {
           const text = box.value.trim();
           if (!text) { box.focus(); return; }
           const entry = EJ.store.get(add.dataset.addFollowup);
-          entry.followUps = (entry.followUps || []).concat({ id: 'fu-' + Date.now(), createdAt: new Date().toISOString(), text });
+          const feel = document.getElementById('fu-emotion-' + entry.id).value || null;
+          entry.followUps = (entry.followUps || []).concat({ id: 'fu-' + Date.now(), createdAt: new Date().toISOString(), text, emotion: feel });
           EJ.store.save(entry);
           render(entry.id);
           u.toast('Follow-up added to the entry.');

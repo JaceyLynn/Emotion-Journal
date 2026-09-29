@@ -474,8 +474,22 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 .entry-body summary { list-style: none; cursor: pointer; display: grid; gap: 0.35rem; }
 .entry-body summary::-webkit-details-marker { display: none; }
-.entry-emotion { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: var(--regular); letter-spacing: 0.04em; text-transform: uppercase; }
-.tag { font-weight: var(--regular); text-transform: none; letter-spacing: 0; font-size: 0.8125rem; color: var(--margin-ink); background: var(--margin-wash); border-radius: 999px; padding: 0.15rem 0.6rem; }
+.entry-body summary { gap: 0.6rem; }
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+}
+.chip-followup { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.you-wrote { font-size: 0.9375rem; color: var(--ink-soft); padding-left: calc(0.9rem + 4px); }
+.you-wrote .note-label { margin-right: 0.4rem; }
 .entry-text-preview {
   font-size: 1.125rem;
   line-height: 1.55;
@@ -489,23 +503,20 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
   padding-left: 0.9rem;
 }
 .entry-body[open] .entry-text-preview { -webkit-line-clamp: unset; display: block; }
-.entry-meta-line { font-size: 0.8125rem; color: var(--muted); }
 
+/* Opened entry: follow-ups first, then reflection, then actions */
 .entry-detail {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 1rem 2rem;
+  gap: 1rem;
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--rule);
-  max-width: 50rem;
+  max-width: 46rem;
 }
-.entry-detail > p.muted, .entry-actions { grid-column: 1 / -1; margin: 0; }
 .entry-detail p { margin: 0.2rem 0; }
-.ai-original { color: var(--margin-ink); background: var(--margin-wash); border-radius: var(--radius-sm); padding: 0.75rem 1rem; }
-.ai-original .note-label { color: var(--margin-ink); }
-.your-words { margin: 0; }
-.your-words p:last-child { font-size: 1.0625rem; font-weight: var(--regular); }
+.entry-reflection { background: var(--margin-wash); border-radius: var(--radius-sm); padding: 1rem 1.1rem; }
+.entry-reflection .note-label { color: var(--margin-ink); }
+.reflection-a { color: var(--ink-soft); }
+.related { font-size: 0.9375rem; color: var(--margin-ink); margin-top: 0.6rem !important; }
+.related a { color: var(--ink); margin-left: 0.25rem; }
 .small-q { font-size: 1.0625rem; margin: 0.2rem 0 0.4rem; }
 .entry-actions { display: flex; gap: 0.5rem; align-items: center; }
 .followup-callout {
@@ -530,7 +541,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
   color: var(--paper);
   font-size: 1rem;
 }
-.tag-followup { background: var(--ink); color: var(--paper); }
 .followup-pill {
   margin-left: auto;
   font-size: 0.8125rem;
@@ -542,7 +552,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
   padding: 0.25rem 0.75rem;
 }
 .followup-pill:hover { background: var(--margin-wash); }
-.entry-emotion { width: 100%; flex-wrap: wrap; }
 .followups {
   grid-column: 1 / -1;
   display: grid;
@@ -552,10 +561,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
   border-radius: var(--radius-sm);
   border: 1px dashed var(--rule-strong);
 }
-.followups textarea { width: 100%; }
-.followup-list { list-style: none; margin: 0; padding: 0 0 0 1rem; border-left: 2px solid var(--mark); display: grid; gap: 0.6rem; width: 100%; }
-.followup-list p { margin: 0.1rem 0 0; }
-.followup-date { font-size: 0.8125rem; color: var(--muted); }
+.followup-list { list-style: none; margin: 0; padding: 0 0 0 1rem; border-left: 2px solid var(--mark); display: grid; gap: 0.9rem; width: 100%; }
+.followup-list p { margin: 0.35rem 0 0; }
+.followup-form { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; width: 100%; }
+.followup-form textarea { flex: 1 1 100%; }
+.followup-feel { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--ink-soft); }
+.followup-feel select { font-size: 0.875rem; padding-top: 0.35rem; padding-bottom: 0.35rem; }
 
 .show-all { list-style: none; display: flex; justify-content: center; padding-top: 0.5rem; }
 .empty { padding: 2rem 0; color: var(--muted); list-style: none; }
@@ -676,7 +687,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 /* Inter regular for running text, medium for everything smaller or interactive */
 .lede, .entry-text, .noticed, .reflection-q, .prose p, .roles dd, .hypothesis-text,
-.entry-text-preview, .your-words p:last-child, .loop-steps .what, .margin-empty p:not(.margin-kicker),
+.entry-text-preview, .loop-steps .what, .margin-empty p:not(.margin-kicker),
 .reflection textarea, .margin-note select {
   font-weight: var(--light);
 }

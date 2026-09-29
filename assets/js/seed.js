@@ -25,8 +25,8 @@ EJ.seed = (function () {
       note: 'It was less about the feedback and more that I don’t know if “safe” was a criticism.',
       text: "Feedback on my presentation was mostly positive but one comment keeps looping in my head. Not sure what they meant by 'safe choices'.",
       followUps: [
-        { after: 1, h: 10, text: 'Still thinking about it this morning, but less loudly.' },
-        { after: 4, h: 15, text: 'Asked the reviewer. They meant I could push the visuals further, not that the work was weak. Mostly relief now.' }
+        { after: 1, h: 10, emotion: 'anxiety', text: 'Still thinking about it this morning, but less loudly.' },
+        { after: 4, h: 15, emotion: 'relief', text: 'Asked the reviewer. They meant I could push the visuals further, not that the work was weak. Mostly relief now.' }
       ] },
     { d: 25, h: 13, category: 'Family', accuracy: 'accurate', intensity: 'Moderate–high',
       text: 'Lunch with my sister. We laughed about the stupid game we used to play as kids and I forgot about everything else for an hour.' },
@@ -36,7 +36,7 @@ EJ.seed = (function () {
       text: 'Walked to the park early and sat in the sun with coffee. Felt calm for the first time in days.' },
     { d: 20, h: 21, category: 'Work', accuracy: 'accurate', intensity: 'Moderate',
       text: "Asked my manager twice what 'done' means for this project and got a vague answer both times. I'm worried I'll get it wrong and not find out until the review.",
-      followUps: [{ after: 3, h: 17, text: 'Wrote down what I thought done meant and sent it to my manager. She agreed with most of it. The worry was bigger than the gap.' }],
+      followUps: [{ after: 3, h: 17, emotion: 'relief', text: 'Wrote down what I thought done meant and sent it to my manager. She agreed with most of it. The worry was bigger than the gap.' }],
       answer: 'The uncertainty. If someone said “this is the bar” I would be fine.' },
     { d: 18, h: 15, category: 'Work', accuracy: 'accurate', intensity: 'Moderate–high',
       text: 'They cancelled the launch meeting an hour before and moved it to Friday. Rescheduled my whole afternoon for nothing. Frustrating.' },
@@ -62,7 +62,7 @@ EJ.seed = (function () {
       note: 'It’s about losing control of my own schedule, not just the change.',
       question: 'Was the strongest part of the frustration the change itself, or not having enough time to adjust?',
       text: 'My manager changed the plan again today after I had already organized my schedule around what we agreed on. I was more upset than I expected.',
-      followUps: [{ after: 1, h: 12, text: 'Talked to her about it. We agreed that changes to the plan come with at least a day’s notice. Feels fairer.' }] },
+      followUps: [{ after: 1, h: 12, emotion: 'calm', text: 'Talked to her about it. We agreed that changes to the plan come with at least a day’s notice. Feels fairer.' }] },
     // A few second and third entries on the same day, so the calendar's
     // concentric rings have something to show.
     { d: 30, h: 19, category: 'Family', accuracy: 'accurate', intensity: 'Moderate',
@@ -110,7 +110,7 @@ EJ.seed = (function () {
           const at = new Date(when);
           at.setDate(when.getDate() + f.after);
           at.setHours(f.h, (j * 23) % 60, 0, 0);
-          return { id: `sample-${i + 1}-fu-${j + 1}`, createdAt: (at > now ? now : at).toISOString(), text: f.text };
+          return { id: `sample-${i + 1}-fu-${j + 1}`, createdAt: (at > now ? now : at).toISOString(), text: f.text, emotion: f.emotion || null };
         })
       };
     });

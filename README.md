@@ -10,7 +10,7 @@ This repository holds a static portfolio demo (the site at the root) and the ori
 
 Emotion Journal is a reflective journal for quickly documenting emotional reactions to events and discovering patterns across time. You write what happened and what you felt. A quiet “second reader” offers one possible reading of the entry. You decide whether it fits.
 
-The guiding principle is **AI suggests. You decide.**
+The guiding principle is that the journal only suggests, and the writer decides.
 
 ## Design question
 
@@ -50,7 +50,7 @@ The vocabulary they draw on (emotions, triggers, keywords, observations and ques
 
 - Every reading is framed as a suggestion and can be confirmed, partly accepted or rejected.
 - Changing any label counts as a revision. The user’s version is what gets stored.
-- History shows the user’s version first, and where they corrected the AI it also keeps what the AI originally suggested.
+- History shows each entry as the user confirmed it, with its tags. Opening an entry shows its follow-ups, each with how it felt at that point, and ends with a reflective question that points to related entries.
 - The Pattern Finder reads only the user’s confirmed version, so corrections change which patterns appear.
 - Each pattern is put back to the user as a question (“Does this connection feel meaningful to you?”) with *Yes*, *Maybe* or *No*. Patterns marked *No* are set aside.
 
