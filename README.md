@@ -1,6 +1,6 @@
 # Emotion Journal
 
-**Notice** · *what happened. what repeats.*
+**Notice** · *what happened & what repeats*
 
 **An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.**
 
