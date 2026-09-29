@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Mood - Emotional Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Monthly Mood</h1>
+        </header>
+
+        <!-- Month Selection -->
+        <div class="date-selection">
+            <button id="prev-month" class="date-nav-btn">←</button>
+            <span id="selected-month" style="color: #333;"></span>
+            <button id="next-month" class="date-nav-btn">→</button>
+        </div>
+
+        <!-- Visualization Container -->
+        <main class="visualization-container">
+            <div id="mood-chart-container">
+                <!-- p5.js canvas will be created here -->
+            </div>
+        </main>
+
+        <!-- Back Buttons -->
+        <button id="daily-mood-btn" class="daily-mood-btn">
+            DAILY MOOD
+        </button>
+        <button id="back-btn" class="back-to-entry-btn">
+            ADD NEW ENTRY
+        </button>
+    </div>
+
+    <script src="mood-chart.js"></script>
+</body>
+</html>

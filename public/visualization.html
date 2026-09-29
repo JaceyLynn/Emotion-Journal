@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Visualization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body class="visualization-page">
+    <div class="app-container">
+        <header>
+            <h1>Daily Mood</h1>
+        </header>
+
+        <!-- Date Selection -->
+        <div class="date-selection" style="background:#00444d;">
+            <button id="prev-day" class="date-nav-btn" style="color: white;">←</button>
+            <span id="selected-date" style="color: white;"></span>
+            <button id="next-day" class="date-nav-btn" style="color: white;">→</button>
+        </div>
+
+        <!-- Visualization Container -->
+        <main class="visualization-container">
+            <div id="mood-chart">
+                <div class="loading-message" style="text-align: center; padding: 40px; color: white;">
+                    Loading visualization...
+                </div>
+            </div>
+            
+            <!-- Data Insights -->
+            <div id="data-insights" class="data-insights" style="display: none; background: #247E5A;">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 0.5px;">HIGHLIGHT:</h3>
+                <p id="insight-text" style="font-size: 16px; line-height: 1.6; color: white;"></p>
+            </div>
+            
+            <!-- Weekly Mood Insights -->
+            <div id="weekly-insights" class="data-insights" style="display: none; background: #40975D;">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 0.5px;">HIGHLIGHT:</h3>
+                <p id="weekly-insight-text" style="font-size: 16px; line-height: 1.6; color: white;"></p>
+            </div>
+        </main>
+
+        <!-- Navigation Buttons -->
+        <button id="mood-chart-btn" class="mood-chart-btn">
+            MONTHLY MOOD
+        </button>
+        <button id="back-btn" class="back-to-entry-btn">
+            ADD NEW ENTRY
+        </button>
+    </div>
+
+    <script src="visualization.js"></script>
+</body>
+</html>

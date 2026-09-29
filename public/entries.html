@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Entries - Emotional Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Recent Entries</h1>
+        </header>
+
+        <!-- Recent Entries -->
+        <main class="entries-page">
+            <div class="recent-entries full-page">
+                <div id="entries-list" class="entries-list">
+                    <!-- Recent entries will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="save-section">
+        <div class="button-row">
+            <button id="chart-btn" class="primary-btn nav-btn" style="background: #333; width: 50%; height: 60px; border-radius: 0;">
+                MOOD CHART
+            </button>
+            <button id="back-btn" class="primary-btn nav-btn" style="background: #333; width: 50%; height: 60px; border-radius: 0;">
+                BACK TO ENTRY
+            </button>
+        </div>
+    </div>
+
+    <script src="entries.js"></script>
+</body>
+</html>

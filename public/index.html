@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="entry-page">
+    <div class="app-container">
+        <header>
+            <h1>New Entry</h1>
+        </header>
+
+        <main class="main-content">
+            <!-- Date/Time Section -->
+            <section class="section datetime-section">
+                <div class="datetime-display">
+                    <div class="date-info">
+                        <span id="current-date"></span>
+                    </div>
+                    <div class="time-info">
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 1: Feeling -->
+            <section class="section feeling-section">
+                <h2 class="section-header" data-section="feeling">
+                    FEELING
+                </h2>
+                <h3 class="Description" style="padding-left: 15px;">How are you feeling?</h3>
+                <div class="section-content">
+
+                    <!-- Mood Meter -->
+                    <div class="input-group">
+                        <label class="collapsible-label" id="mood-meter-toggle">
+                            Not sure? Try Mood Meter
+                            <span class="toggle-icon">▼</span>
+                        </label>
+                        <div class="mood-meter-container collapsed" id="mood-meter-content">
+                            <div class="mood-meter-wrapper">
+                                <span class="y-axis-label">Energy Level</span>
+                                <canvas id="mood-meter" width="300" height="300"></canvas>
+                                <div class="x-axis-label">Pleasure Level</div>
+                            </div>
+                            <div class="mood-meter-info">
+                                <span id="mood-coordinates">Click to set your mood</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="feeling-input">Write whatever is on your mind now...</label>
+                        <textarea 
+                            id="feeling-input" 
+                            placeholder="..."
+                            rows="4"
+                        ></textarea>
+                        <button id="analyze-btn" class="primary-btn">Record Emotion</button>
+                    </div>
+                    
+                    <div id="analysis-result" class="analysis-result hidden">
+                        <div class="emotion-display">
+                            <span class="emotion-label">Detected Emotion:</span>
+                            <span id="emotion-category" class="emotion-value"></span>
+                        </div>
+                        
+                        <div class="sentiment-display">
+                            <label for="sentiment-slider">Sentiment Score:</label>
+                            <div class="slider-container">
+                                <input 
+                                    type="range" 
+                                    id="sentiment-slider" 
+                                    min="0" 
+                                    max="100" 
+                                    class="sentiment-slider"
+                                    disabled
+                                >
+                                <span id="sentiment-value" class="sentiment-value">50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Source -->
+            <section class="section source-section">
+                <h2 class="section-header" data-section="source">
+                    EVENT
+                </h2>
+                <div class="section-content collapsed">
+                    <div class="source-inputs">
+                        <div class="input-group">
+                            <label for="event-category">Event Category</label>
+                            <select id="event-category">
+                                <option value="">Select a category...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="event-description">Event Description</label>
+                            <input 
+                                type="text" 
+                                id="event-description" 
+                                placeholder="..."
+                            >
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="event-time">When did this happen?</label>
+                            <input 
+                                type="datetime-local" 
+                                id="event-time"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Design -->
+            <section class="section design-section">
+                <h2 class="section-header" data-section="design">
+                    CUSTOMIZE
+                </h2>
+                <div class="section-content collapsed">
+                    <div class="design-inputs">
+                        <div class="input-group">
+                            <label>Choose an Emoji</label>
+                            <div id="emoji-options" class="emoji-grid">
+                                <!-- Emojis will be populated dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Pick a Color</label>
+                            <div id="color-wheel" class="color-wheel">
+                                <!-- Colors will be populated dynamically -->
+                            </div>
+                            <div id="selected-color" class="selected-color">
+                                <span id="color-preview"></span>
+                                <span id="color-name">No color selected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- AI Response Section -->
+        <div id="ai-response-section" class="ai-response-section hidden">
+            <div class="ai-response-content">
+                <p id="ai-response-text"></p>
+            </div>
+        </div>
+
+        <!-- Save and Navigation Buttons -->
+        <div class="save-section">
+            <div class="button-row">
+                <button id="view-entries-btn" class="primary-btn nav-btn">
+                    Reflections
+                </button>
+                <button id="save-btn" class="primary-btn save-btn" disabled>
+                    Save Entry
+                </button>
+            </div>
+        </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Analyzing your emotions...</p>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-message" class="success-message hidden">
+        <div class="success-content">
+            <span class="success-icon">✅</span>
+            <span>Journal entry saved successfully!</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

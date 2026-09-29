@@ -1,0 +1,32 @@
+{
+  "name": "emotional-journal-ollama",
+  "version": "1.0.0",
+  "description": "An emotional journal application with Ollama integration for sentiment analysis and emotion categorization",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "server": "node server.js",
+    "visualize": "node dataVisualizer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "emotional-journal",
+    "sentiment-analysis",
+    "lm-studio",
+    "emotion-categorization",
+    "ai",
+    "nlp"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
