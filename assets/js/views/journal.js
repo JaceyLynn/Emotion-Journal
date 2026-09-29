@@ -9,6 +9,58 @@ EJ.views.journal = (function () {
   let meter;
   let draft = null; // entry being written or edited
 
+  // Most visitors won't write their own entry, so the page types one out
+  // and asks for a reading on its own. Typing or "Write your own" stops it.
+  const EXAMPLE = "The team switched the launch date again this afternoon, right after I'd rearranged my whole week around it. I was more frustrated than I expected.";
+  let demo = { active: false, timer: null };
+
+  function stopDemo(clear) {
+    clearTimeout(demo.timer);
+    demo.active = false;
+    $('entry-text').classList.remove('is-typing');
+    $('demo-note').hidden = true;
+    if (clear) {
+      resetForm();
+      $('entry-text').focus();
+    }
+  }
+
+
+  function playDemo() {
+    if (demo.active || $('entry-text').value || draft) return;
+    demo.active = true;
+    const box = $('entry-text');
+    $('demo-note').hidden = false;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finish = () => {
+      box.classList.remove('is-typing');
+      demo.timer = setTimeout(() => { if (demo.active) interpret({ preventDefault() {} }, true); }, 500);
+    };
+    if (reduced) {
+      box.value = EXAMPLE;
+      finish();
+      return;
+    }
+    box.classList.add('is-typing');
+    let i = 0;
+    const tick = () => {
+      if (!demo.active) return;
+      i += 1;
+      box.value = EXAMPLE.slice(0, i);
+      if (i < EXAMPLE.length) demo.timer = setTimeout(tick, EXAMPLE[i - 1] === ' ' ? 45 : 26);
+      else finish();
+    };
+    demo.timer = setTimeout(tick, 400);
+  }
+
+  function startDemoWhenVisible() {
+    if (!('IntersectionObserver' in window)) { playDemo(); return; }
+    const io = new IntersectionObserver((items) => {
+      if (items.some((it) => it.isIntersecting)) { io.disconnect(); playDemo(); }
+    }, { threshold: 0.4 });
+    io.observe($('entry-text'));
+  }
+
   function pad(n) { return String(n).padStart(2, '0'); }
   function toLocalInput(d) {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -20,6 +72,7 @@ EJ.views.journal = (function () {
   }
 
   function resetForm() {
+    stopDemo(false);
     draft = null;
     $('entry-form').reset();
     $('entry-time').value = toLocalInput(new Date());
@@ -70,8 +123,9 @@ EJ.views.journal = (function () {
     return { text, eventTime: time.toISOString(), category: $('entry-category').value, mood: meter.value };
   }
 
-  function interpret(ev) {
+  function interpret(ev, fromDemo) {
     ev.preventDefault();
+    if (!fromDemo) stopDemo(false);
     const form = readForm();
     if (form.text.length < 8) {
       $('form-hint').textContent = 'Write a sentence or two first. The reading works from your words.';
@@ -97,7 +151,7 @@ EJ.views.journal = (function () {
       $('interpret-btn').disabled = false;
       $('interpret-btn').textContent = 'Read it again';
       showReading(draft, true);
-      if (window.matchMedia('(max-width: 860px)').matches) $('margin').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!fromDemo && window.matchMedia('(max-width: 860px)').matches) $('margin').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 650);
   }
 
@@ -131,6 +185,9 @@ EJ.views.journal = (function () {
       $('entry-form').addEventListener('submit', interpret);
       $('save-btn').addEventListener('click', save);
       $('discard-btn').addEventListener('click', resetForm);
+      $('demo-clear').addEventListener('click', () => stopDemo(true));
+      // Typing into the box while the example is playing replaces it.
+      $('entry-text').addEventListener('keydown', () => { if (demo.active && $('entry-text').classList.contains('is-typing')) stopDemo(true); });
       document.querySelectorAll('#confirm button').forEach((b) => {
         b.addEventListener('click', () => {
           setAccuracy(b.dataset.accuracy);
@@ -144,6 +201,7 @@ EJ.views.journal = (function () {
         });
       });
       resetForm();
+      startDemoWhenVisible();
     },
 
     show(id) {
@@ -153,6 +211,7 @@ EJ.views.journal = (function () {
         resetForm();
         return;
       }
+      stopDemo(false);
       draft = JSON.parse(JSON.stringify(entry));
       $('journal-title').textContent = 'Revisit an entry';
       $('entry-dateline').textContent = EJ.util.formatDay(entry.eventTime);

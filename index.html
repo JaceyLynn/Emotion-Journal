@@ -7,7 +7,7 @@
   <meta name="description" content="An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@400&family=Inter:wght@200;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -44,6 +44,10 @@
             <label class="sr-only" for="entry-text">Describe what happened and what you felt</label>
             <textarea id="entry-text" class="entry-text" rows="6"
               placeholder="Describe what happened, and what you felt. A few sentences is enough."></textarea>
+            <p class="demo-note" id="demo-note" hidden>
+              <span>An example entry, written for you to explore.</span>
+              <button type="button" class="link-btn" id="demo-clear">Write your own instead</button>
+            </p>
 
             <div class="entry-meta">
               <label class="field">
@@ -57,7 +61,11 @@
             </div>
 
             <details class="mood-toggle" id="mood-toggle">
-              <summary>Not sure how to name it? <em>Locate the feeling instead.</em></summary>
+              <summary>
+                <span class="mt-swatch" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="mt-text"><strong>Not sure how to name it?</strong> Locate the feeling instead.</span>
+                <span class="mt-action" aria-hidden="true"></span>
+              </summary>
               <div id="mood-meter"></div>
             </details>
 
@@ -186,6 +194,12 @@
         </div>
       </section>
       <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+    </section>
+
+    <section class="block about-cta" aria-labelledby="about-cta-title">
+      <h2 class="view-title" id="about-cta-title">Behind the design</h2>
+      <p class="lede">Read about the inspiration, the design question and how the AI is meant to take part without taking over.</p>
+      <a class="btn btn-primary" href="#about">Read about this project</a>
     </section>
     </div>
 
