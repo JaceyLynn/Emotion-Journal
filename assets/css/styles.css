@@ -2,6 +2,7 @@
    One rounded sans typeface throughout, soft corners and warm paper tones. */
 
 :root {
+  color-scheme: light; /* a deliberately single, paper-light theme */
   --paper: #f8f1e7;
   --paper-deep: #f0e5d6;
   --card: #fffaf3;
