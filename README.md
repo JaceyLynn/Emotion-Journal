@@ -1,200 +1,113 @@
-# Emotional Journal with Ollama Integration
+# Emotion Journal
 
-An interactive command-line application that analyzes the emotional content of journal entries using a local Ollama language model and stores all data for future visualization.
+**Notice** · *what happened & what repeats*
 
-## Features
+**An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.**
 
-- **Real-time Emotion Analysis**: Categorizes emotions into 16 primary categories
-- **Sentiment Scoring**: Provides sentiment scores from 0-100
-- **Interactive User Choices**: Select emojis and colors that match your emotions
-- **Data Storage**: All entries saved to JSON for data visualization
-- **Local AI Processing**: Uses Ollama for privacy-focused, offline analysis
-- **Statistics & Insights**: View trends and patterns in your emotional data
-- **Data Export**: Export data for external visualization tools
+This repository holds a static portfolio demo (the site at the root) and the original working prototype (in [`prototype/`](prototype/)).
 
-## Prerequisites
+## Concept
 
-1. **Node.js** (version 14 or higher)
-2. **Ollama** installed and running locally
+Emotion Journal is a reflective journal for quickly documenting emotional reactions to events and discovering patterns across time. You write what happened and what you felt. A quiet “second reader” offers one possible reading of the entry. You decide whether it fits.
 
-### Installing Ollama
+The guiding principle is that the journal only suggests, and the writer decides.
 
-1. Download Ollama from [https://ollama.ai](https://ollama.ai)
-2. Install and start the Ollama service:
-   ```bash
-   # Start Ollama service
-   ollama serve
-   ```
-3. Pull a language model (e.g., llama2):
-   ```bash
-   ollama pull llama2
-   ```
+## Design question
 
-## Installation
+The question is not *how can AI tell someone what they are feeling?*
 
-1. Clone or download this project
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+It is: **how can AI help someone notice patterns in their own experience while preserving their authority over interpretation?**
 
-## Usage
+So the AI is framed as a hypothesis generator, not an authority. Its language stays tentative (“I noticed…”, “This may be connected to…”, “One possible reading…”), and it never offers diagnosis, therapy or instructions.
 
-### Interactive Mode
+## Interaction flow
 
-Start the interactive journal:
-```bash
-npm start
-```
+**Capture → Interpret → Confirm → Compare → Reflect**
 
-Or for development with auto-restart:
-```bash
-npm run dev
-```
+Journal, History and Patterns are sections of one continuous page, so the whole loop reads top to bottom. About is a separate view that explains the concept and what is simulated.
 
-### Data Visualization
+1. **Capture.** Describe what happened, when, and optionally its context, by typing or by speaking (voice input uses the browser's own speech recognition where available). If the feeling is hard to name, the Mood Meter lets you locate it on a colour field of pleasure and energy instead. If it is too strong to write about yet, you can save just the feeling and come back to write about it later; it waits in History.
+2. **Interpret.** A margin note proposes a possible emotion, possible trigger, intensity and a short observation. The Mood Meter shows where that emotion sits, and moving the point changes the emotion.
+3. **Confirm.** You answer *Feels accurate*, *Partly accurate* or *Not how I see it*. Every label stays editable, and you can add your own words.
+4. **Compare.** The Patterns section looks across entries for possible recurring relationships. It also keeps the original prototype's two visualisations, rebuilt in D3: a monthly calendar where each day is a set of concentric ink-blot rings (one per entry), and a daily view that places each entry in a two-hour column by how pleasant it felt.
+5. **Reflect.** Instead of reassurance, each entry ends with one specific question to sit with.
 
-Generate a comprehensive report of your journal data:
-```bash
-npm run visualize
-```
+Any entry in History can collect **follow-ups** written later, so what happened next stays attached to the original moment.
 
-This creates a detailed report and exports data for external visualization tools.
+## AI concept architecture
 
-### Commands within the app:
-- Enter journal text for analysis
-- `view` - See your last 5 journal entries
-- `stats` - View statistics about your emotional patterns
-- `quit` - Exit the application
+The AI has three responsibilities, each kept in its own file under [`assets/js/ai/`](assets/js/ai/):
 
-### Example Usage
+| Role | What it does | File |
+| --- | --- | --- |
+| **Interpreter** | Reads one entry and proposes a possible emotion, trigger, intensity and observation. | `interpreter.js` |
+| **Pattern Finder** | Looks across confirmed entries for recurring relationships: emotion + trigger, emotion + event category, time of day, what tends to follow a harder day, and intensity over time. | `patternFinder.js` |
+| **Reflection Layer** | Turns an interpretation into a short question. It never says what to feel, suggests a diagnosis or recommends an action. | `reflection.js` |
 
-```
-Enter your journal entry: I had an amazing day at the park with my family. The weather was perfect and we laughed so much.
+The vocabulary they draw on (emotions, triggers, keywords, observations and questions) lives in [`assets/js/lexicon.js`](assets/js/lexicon.js).
 
---- Emotional Analysis ---
-Primary Emotion: joyful
-Sentiment Score: 85/100
+## Human-in-the-loop design
 
-Choose an emoji that represents your feeling:
-1. 😊  2. 😄  3. 🎉  4. 🌟  5. ✨
-Enter number (1-5): 3
-
-Choose a color that matches your mood:
-1. yellow  2. orange  3. gold  4. sunshine
-Enter number (1-4): 2
-
-What type of event or situation is this about?
-1. work  2. social  3. family  4. health  5. daily routine
-Enter number (1-5): 1
-Describe the work event (e.g., "industry tech fair", "team meeting"): networking event
-
-When did this event happen?
-Press Enter for current time, or enter a custom time
-Examples: "11/22/2025, 2:30:00 PM" or "yesterday at 3pm"
-Event time: 11/17/2025, 10:00:00 AM
-
-Primary Emotion: joyful
-Sentiment Score: 85/100
-Event Time: 11/17/2025, 10:00:00 AM
-Event Category: work
-Event Description: networking event
-Your Emoji: 🎉
-Your Color: orange
-✅ Entry saved to journal-data.json
-```
-
-### Data Storage Structure
-
-Each journal entry is stored with:
-```json
-{
-  "id": "1700000000000",
-  "timestamp": "2025-11-17T21:00:00.000Z",
-  "inputTime": "11/17/2025, 4:00:00 PM",
-  "userInput": "Your journal text here",
-  "sentimentAnalysis": {
-    "sentimentScore": 85,
-    "emotionalCategory": "joyful"
-  },
-  "sourceEvent": {
-    "category": "work",
-    "description": "industry tech fair",
-    "eventTime": "11/17/2025, 2:00:00 PM"
-  },
-  "userCustomDesign": {
-    "userEmoji": "🎉",
-    "userColor": "orange"
-  },
-  "createdAt": 1700000000000
-}
-```
-
-### Structured Data Groups
-
-- **Core Info**: `id`, `timestamp`, `inputTime`, `userInput`, `createdAt`
-- **AI Analysis**: `sentimentAnalysis` (score & emotion category)
-- **Event Context**: `sourceEvent` (category, description, event time)  
-- **User Customization**: `userCustomDesign` (emoji & color choices)
-
-### Source Event Categories
-
-The application categorizes the source of emotions into:
-- **Work**: Job-related experiences and stress
-- **Social**: Interactions with friends and social events  
-- **Family**: Family relationships and activities
-- **Health**: Physical and mental health matters
-- **Daily Routine**: Regular activities and habits
-- **Leisure**: Hobbies, entertainment, and relaxation
-- **Education**: Learning and academic experiences
-- **Relationships**: Romantic and close personal relationships
-- **Travel**: Travel experiences and adventures
-- **Personal Growth**: Self-improvement and development
-- **Other**: Miscellaneous experiences
-
-## Project Structure
-
-```
-├── index.js              # Main application file
-├── emotionAnalyzer.js     # Emotion analysis utilities  
-├── dataVisualizer.js      # Data visualization and export
-├── journal-data.json      # Your journal entries (created automatically)
-├── journal-export.json    # Processed data for visualization tools
-├── package.json           # Project dependencies
-└── README.md             # This file
-```
-
-## Emotion Categories
-
-The application categorizes emotions into:
-- Joyful, Sadness, Anger, Fear, Surprise, Trust
-- Awe, Confusion, Love, Disgust, Anticipation, Calm  
-- Confident, Gratitude, Compassionate, Annoyance
-
-## Data Visualization Features
-
-- **Overview Statistics**: Total entries, date ranges, average sentiment, most common emotion and source event
-- **Emotion Distribution**: See which emotions appear most frequently
-- **Source Event Analysis**: Understand what types of situations trigger different emotions
-- **Sentiment Analysis**: Breakdown of positive/negative/neutral entries
-- **Time Patterns**: Discover when you tend to journal and feel certain emotions
-- **Data Export**: JSON export for use with external tools (D3.js, Chart.js, Python, etc.)
-
-## Troubleshooting
-
-### "Unable to connect to Ollama"
-- Ensure Ollama is installed and running: `ollama serve`
-- Check that Ollama is accessible at `http://localhost:11434`
-- Verify you have downloaded a language model: `ollama list`
-
-### "Model not found"
-- Pull the required model: `ollama pull llama2`
-- Or change the model name in `index.js` to one you have installed
+- Every reading is framed as a suggestion and can be confirmed, partly accepted or rejected.
+- Changing any label counts as a revision. The user’s version is what gets stored.
+- History shows each entry as the user confirmed it, with its tags. Opening an entry shows its follow-ups, each with how it felt at that point, and ends with a reflective question that points to related entries.
+- The Pattern Finder reads only the user’s confirmed version, so corrections change which patterns appear.
+- Each pattern is put back to the user as a question (“Does this connection feel meaningful to you?”) with *Yes*, *Maybe* or *No*. Patterns marked *No* are set aside.
 
 ## Privacy
 
-This application processes all data locally using Ollama. No journal entries are sent to external servers, ensuring complete privacy of your personal thoughts and emotions.
+Personal journal content should remain private whenever possible. The demo runs entirely in the browser: entries are kept in `localStorage` and never sent anywhere. The original prototype explored the same principle by running language models locally, so journal text never had to go to a third-party AI service.
 
-## License
+## Portfolio demo: what is simulated
 
-ISC
+**The AI in this demo is simulated.** There is no language model and no API call. The Interpreter uses transparent keyword matching against the lexicon, the Reflection Layer picks from curated questions, and the Pattern Finder uses simple counts and thresholds. The same entry always gets the same reading.
+
+The sample journal is fictional. It is generated on first visit with dates relative to today, and can be restored from the About page.
+
+## Original technical exploration
+
+The [`prototype/`](prototype/) folder holds the earlier working version:
+
+- A Node/Express web app (`prototype/server.js`, `prototype/public/`) that sent entries to a local model in **LM Studio** (`localhost:1234`) for emotion categorisation, sentiment scoring and responses, stored entries in a JSON file, and visualised them with p5.js and D3.
+- An earlier command-line version (`prototype/index.js`) that used **Ollama** for the same analysis. Its original README is at [`prototype/README.md`](prototype/README.md).
+
+The prototype needs Node.js and a local model server to run; it is kept for reference and is not part of the published demo.
+
+## Running the demo
+
+There is no build step and no dependencies to install. Serve the repository root with any static file server, for example:
+
+```bash
+python3 -m http.server 8000
+# then open http://localhost:8000
+```
+
+D3 is vendored in `assets/vendor/`, so the demo works offline apart from the web fonts.
+
+## GitHub Pages deployment
+
+1. In the repository on GitHub, open **Settings → Pages**.
+2. Under **Build and deployment**, choose **Deploy from a branch**.
+3. Select the `main` branch and the `/ (root)` folder, then save.
+4. The site will be published at `https://<username>.github.io/Emotion-Journal/`.
+
+All paths in the site are relative, so it works from that sub-path without changes. The empty `.nojekyll` file tells Pages to serve the files as they are.
+
+## Project structure
+
+```
+index.html              the single-page demo
+assets/css/styles.css   visual design
+assets/js/
+  util.js               shared helpers
+  lexicon.js            emotions, triggers, Mood Meter words
+  ai/                   simulated Interpreter, Pattern Finder, Reflection Layer
+  seed.js               fictional sample journal
+  store.js              localStorage persistence
+  moodMeter.js          pleasure/energy picker
+  voiceInput.js         speech-to-text for the entry box
+  views/                Journal, History and Patterns sections
+  app.js                page navigation (one scroll plus About)
+assets/vendor/d3.min.js D3 v7 (ISC licence)
+prototype/              original LM Studio / Ollama prototype
+```

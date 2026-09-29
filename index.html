@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion Journal</title>
+  <meta name="description" content="An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@500;700&family=Inter:wght@400;500&family=Sirin+Stencil&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <a class="wordmark" href="#journal">Emotion Journal</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#journal" data-view="journal">Journal</a>
+      <a href="#history" data-view="history">History</a>
+      <a href="#patterns" data-view="patterns">Patterns</a>
+      <a href="#about" data-view="about">About</a>
+    </nav>
+  </header>
+
+  <p class="demo-banner">Portfolio demo. The journal’s readings are simulated, and everything you write stays in this browser.</p>
+
+  <main id="main">
+
+    <div id="scroll-view">
+    <header class="intro">
+      <h1 class="display"><span class="brand">Notice</span> <span class="tagline">what happened &amp; what repeats</span></h1>
+      <p class="lede">A journal for quick notes on how events made you feel. The journal offers a reading of each entry and notices what repeats over time. You correct it, and the final interpretation stays with you.</p>
+    </header>
+
+    <!-- JOURNAL -->
+    <section class="block" id="journal" aria-labelledby="journal-title">
+      <div class="page">
+        <div class="page-main">
+          <p class="eyebrow" id="entry-dateline"></p>
+          <h2 class="view-title" id="journal-title">What happened?</h2>
+
+          <form id="entry-form" novalidate>
+            <label class="sr-only" for="entry-text">Describe what happened and what you felt</label>
+            <div class="entry-box">
+              <textarea id="entry-text" class="entry-text" rows="3"
+                placeholder="Describe what happened, and what you felt. A few sentences is enough, typed or spoken."></textarea>
+              <button type="button" class="voice-btn" id="voice-btn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"></path></svg>
+                <span class="voice-label">Speak</span>
+              </button>
+            </div>
+            <p class="demo-note" id="demo-note" hidden>
+              <span>An example entry, written for you to explore.</span>
+              <button type="button" class="link-btn" id="demo-clear">Write your own instead</button>
+            </p>
+
+            <div class="entry-meta">
+              <label class="field">
+                <span class="field-label">When</span>
+                <input type="datetime-local" id="entry-time">
+              </label>
+              <label class="field">
+                <span class="field-label">Context <span class="muted">(optional)</span></span>
+                <select id="entry-category"></select>
+              </label>
+            </div>
+
+            <details class="mood-toggle" id="mood-toggle">
+              <summary>
+                <span class="mt-swatch" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="mt-text"><strong>Not sure how to name it?</strong> Locate the feeling instead.<span class="mt-sub">Too much to write right now? Save just the feeling and come back to it.</span></span>
+                <span class="mt-action" aria-hidden="true"></span>
+              </summary>
+              <div id="mood-meter"></div>
+              <div class="feeling-first" id="feeling-first">
+                <p>Too much to put into words right now? Keep just the feeling. It waits in History until you are ready to write.</p>
+                <button type="button" class="btn btn-small" id="feeling-first-btn" disabled>Save just the feeling</button>
+              </div>
+            </details>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="interpret-btn">Ask for a reading</button>
+              <span class="form-hint" id="form-hint" aria-live="polite"></span>
+            </div>
+          </form>
+
+          <section class="reflection" id="reflection" hidden aria-labelledby="reflection-q">
+            <p class="eyebrow">A question to sit with</p>
+            <p class="reflection-q" id="reflection-q"></p>
+            <label class="sr-only" for="reflection-answer">Your answer (optional)</label>
+            <textarea id="reflection-answer" rows="3" placeholder="Answer if you like. You can also leave it as a question."></textarea>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" id="save-btn">Keep this entry</button>
+              <button type="button" class="btn btn-quiet" id="discard-btn">Start over</button>
+            </div>
+          </section>
+        </div>
+
+        <aside class="margin" id="margin" aria-live="polite" aria-label="A second reader's note">
+          <div class="margin-empty" id="margin-empty">
+            <p class="margin-kicker">Second reader</p>
+            <p>After you write, a quiet note will appear here: one possible reading of the entry. You can accept it, adjust it or set it aside.</p>
+          </div>
+
+          <div class="margin-note" id="margin-note" hidden>
+            <p class="margin-kicker">One possible reading</p>
+
+            <label class="note-field">
+              <span class="note-label">Possible emotion</span>
+              <select id="r-emotion"></select>
+            </label>
+            <label class="note-field">
+              <span class="note-label">Possible trigger</span>
+              <select id="r-trigger"></select>
+            </label>
+            <label class="note-field">
+              <span class="note-label">Intensity</span>
+              <select id="r-intensity"></select>
+            </label>
+
+            <div class="note-field">
+              <span class="note-label">What I noticed</span>
+              <p class="noticed" id="r-noticed"></p>
+            </div>
+
+            <fieldset class="confirm" id="confirm">
+              <legend>Does this reading fit?</legend>
+              <div class="confirm-options">
+                <button type="button" data-accuracy="accurate">Feels accurate</button>
+                <button type="button" data-accuracy="partly">Partly accurate</button>
+                <button type="button" data-accuracy="not">Not how I see it</button>
+              </div>
+            </fieldset>
+
+            <div class="revise" id="revise" hidden>
+              <p class="revise-hint">Change anything that doesn’t fit. Your version is the one that gets kept.</p>
+              <label class="note-field">
+                <span class="note-label">In your words <span class="muted">(optional)</span></span>
+                <textarea id="r-note" rows="2" placeholder="What would you say instead?"></textarea>
+              </label>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="block" id="history" aria-labelledby="history-title">
+      <header class="view-head">
+        <h2 class="view-title" id="history-title">History</h2>
+        <p class="lede">Each entry keeps what you wrote and the feelings you settled on. Open one to see what came after, then look back at it.</p>
+      </header>
+      <aside class="followup-callout">
+        <span class="followup-icon" aria-hidden="true">↳</span>
+        <p><strong>Feelings keep moving after you write them down.</strong> Open any entry to add a follow-up: what happened next, or how it looks now. It stays attached to the original moment.</p>
+      </aside>
+      <div class="filters" id="history-filters" role="group" aria-label="Filter by emotion"></div>
+      <ol class="entries" id="entries"></ol>
+      <p class="muted small" id="history-footnote"></p>
+    </section>
+
+    <!-- PATTERNS -->
+    <section class="block" id="patterns" aria-labelledby="patterns-title">
+      <header class="view-head">
+        <h2 class="view-title" id="patterns-title">Patterns</h2>
+        <p class="lede">Not “this is your pattern”. Just some things that may be worth noticing, drawn from the version of each entry you confirmed.</p>
+      </header>
+
+      <section aria-labelledby="hyp-title">
+        <h3 class="section-title" id="hyp-title">Possible patterns</h3>
+        <ol class="hypotheses" id="hypotheses"></ol>
+        <details class="set-aside" id="set-aside" hidden>
+          <summary>Set aside by you</summary>
+          <ol class="hypotheses" id="hypotheses-rejected"></ol>
+        </details>
+      </section>
+
+      <section class="charts" aria-labelledby="charts-title">
+        <h3 class="section-title" id="charts-title">Across your entries</h3>
+        <div class="legend" id="legend"></div>
+        <figure class="chart chart-calendar">
+          <div class="chart-head">
+            <figcaption>Monthly mood</figcaption>
+            <div class="month-nav">
+              <button type="button" id="prev-month" aria-label="Previous month">←</button>
+              <span id="month-label" aria-live="polite"></span>
+              <button type="button" id="next-month" aria-label="Next month">→</button>
+            </div>
+          </div>
+          <div id="chart-calendar" class="chart-body"></div>
+          <p class="chart-note">Each ring is one entry, the day’s first entry on the outside. Select a day to see it hour by hour.</p>
+        </figure>
+        <figure class="chart chart-day">
+          <figcaption id="day-label">Daily mood</figcaption>
+          <div id="chart-day" class="chart-body"></div>
+          <p class="chart-note">Higher dots were more pleasant. Select one to open the entry.</p>
+        </figure>
+        <div class="chart-row">
+          <figure class="chart">
+            <figcaption>Time of day</figcaption>
+            <div id="chart-time" class="chart-body"></div>
+          </figure>
+          <figure class="chart">
+            <figcaption>Recurring triggers</figcaption>
+            <div id="chart-triggers" class="chart-body"></div>
+          </figure>
+        </div>
+      </section>
+      <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+    </section>
+
+    <section class="block about-cta" aria-labelledby="about-cta-title">
+      <h2 class="view-title" id="about-cta-title">Behind the design</h2>
+      <p class="lede">Read about the inspiration, the design question and how the journal takes part without taking over.</p>
+      <a class="btn btn-primary" href="#about">Read about this project</a>
+    </section>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="prose" id="about" hidden>
+      <h1 class="view-title">About this project</h1>
+
+      <p class="lede">Emotion Journal is a reflective journal for quickly documenting emotional reactions to events and discovering patterns across time.</p>
+
+      <section class="loop" aria-labelledby="loop-title">
+        <h2 id="loop-title">How the journal takes part</h2>
+        <ol class="loop-steps">
+          <li><span class="who">You capture</span><span class="what">a moment in your own words</span></li>
+          <li class="ai"><span class="who">The journal interprets</span><span class="what">possible emotion, context and trigger</span></li>
+          <li><span class="who">You correct</span><span class="what">every interpretation remains editable</span></li>
+          <li class="ai"><span class="who">The journal compares</span><span class="what">possible patterns emerge across your history</span></li>
+          <li><span class="who">You reflect</span><span class="what">patterns are hypotheses, not conclusions</span></li>
+        </ol>
+  
+
+      <h2>The design question</h2>
+      <p>The question here is not <em>how AI can tell someone what they are feeling</em>. It is <strong>how AI can help someone notice patterns in their own experience while preserving their authority over interpretation.</strong></p>
+      <p>So the AI is framed as a hypothesis generator. It proposes; the person writing the journal decides. Its language is tentative on purpose: “I noticed…”, “This may be connected to…”, “One possible reading…”.</p>
+
+      <h2>Three roles for the AI</h2>
+      <dl class="roles">
+        <dt>Interpreter</dt>
+        <dd>Reads one entry and proposes a possible emotion, trigger, intensity and a short observation.</dd>
+        <dt>Pattern Finder</dt>
+        <dd>Looks across entries the person has confirmed and proposes recurring relationships, such as an emotion that keeps appearing next to the same kind of situation.</dd>
+        <dt>Reflection Layer</dt>
+        <dd>Turns observations into a question. It never tells someone what they should feel, what diagnosis they may have or what to do.</dd>
+      </dl>
+
+      <h2>Human in the loop</h2>
+      <p>Every reading can be confirmed, partly accepted or rejected, and every label stays editable. When someone changes a reading, their version is what gets stored, and it is their version the Pattern Finder learns from. Patterns can be marked meaningful, maybe, or set aside.</p>
+
+      <h2>What is simulated here</h2>
+      <p>This portfolio demo simulates the AI interaction. The readings come from transparent, rule-based matching against a small vocabulary of emotions and triggers, and the sample journal is fictional. No text you write is sent anywhere: entries are kept in your browser’s local storage.</p>
+
+      <h2>Privacy, and the original prototype</h2>
+      <p>Personal journal content should remain private whenever possible. The original prototype explored local-model processing, running language models on the writer’s own machine through Ollama and LM Studio, so private journal content would not need to be sent to a third-party AI service. That version is kept in the repository’s <code>prototype</code> folder.</p>
+
+      <p class="about-actions">
+        <a class="btn" href="https://github.com/JaceyLynn/Emotion-Journal">View the code on GitHub</a>
+        <button type="button" class="btn btn-quiet" id="reset-btn">Reset the sample journal</button>
+      </p>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <p>Emotion Journal. A design exploration by Junqi.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="assets/vendor/d3.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/lexicon.js"></script>
+  <script src="assets/js/ai/interpreter.js"></script>
+  <script src="assets/js/ai/reflection.js"></script>
+  <script src="assets/js/ai/patternFinder.js"></script>
+  <script src="assets/js/seed.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/moodMeter.js"></script>
+  <script src="assets/js/voiceInput.js"></script>
+  <script src="assets/js/views/journal.js"></script>
+  <script src="assets/js/views/history.js"></script>
+  <script src="assets/js/views/patterns.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
