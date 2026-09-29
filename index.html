@@ -23,14 +23,14 @@
     </nav>
   </header>
 
-  <p class="demo-banner">Portfolio demo. The AI is simulated, and everything you write stays in this browser.</p>
+  <p class="demo-banner">Portfolio demo. The journal’s readings are simulated, and everything you write stays in this browser.</p>
 
   <main id="main">
 
     <div id="scroll-view">
     <header class="intro">
-      <h1 class="display">Notice what happened.<br>Notice what repeats.</h1>
-      <p class="lede">A journal that uses AI to help interpret emotional reactions and surface possible patterns over time, while leaving the final interpretation with you.</p>
+      <h1 class="display">Notice <span class="light">what happened.</span><br>Notice <span class="light">what repeats.</span></h1>
+      <p class="lede">A journal for quick notes on how events made you feel. The journal offers a reading of each entry and notices what repeats over time. You correct it, and the final interpretation stays with you.</p>
     </header>
 
     <!-- JOURNAL -->
@@ -42,7 +42,7 @@
 
           <form id="entry-form" novalidate>
             <label class="sr-only" for="entry-text">Describe what happened and what you felt</label>
-            <textarea id="entry-text" class="entry-text" rows="6"
+            <textarea id="entry-text" class="entry-text" rows="3"
               placeholder="Describe what happened, and what you felt. A few sentences is enough."></textarea>
             <p class="demo-note" id="demo-note" hidden>
               <span>An example entry, written for you to explore.</span>
@@ -139,8 +139,12 @@
     <section class="block" id="history" aria-labelledby="history-title">
       <header class="view-head">
         <h2 class="view-title" id="history-title">History</h2>
-        <p class="lede">Each entry keeps your version of the reading. Where you corrected the AI, both are kept, so you can see what changed.</p>
+        <p class="lede">Each entry keeps your version of the reading. Where you corrected the journal, both are kept, so you can see what changed.</p>
       </header>
+      <aside class="followup-callout">
+        <span class="followup-icon" aria-hidden="true">↳</span>
+        <p><strong>Feelings keep moving after you write them down.</strong> Open any entry to add a follow-up: what happened next, or how it looks now. It stays attached to the original moment.</p>
+      </aside>
       <div class="filters" id="history-filters" role="group" aria-label="Filter by emotion"></div>
       <ol class="entries" id="entries"></ol>
       <p class="muted small" id="history-footnote"></p>
@@ -198,7 +202,7 @@
 
     <section class="block about-cta" aria-labelledby="about-cta-title">
       <h2 class="view-title" id="about-cta-title">Behind the design</h2>
-      <p class="lede">Read about the inspiration, the design question and how the AI is meant to take part without taking over.</p>
+      <p class="lede">Read about the inspiration, the design question and how the journal takes part without taking over.</p>
       <a class="btn btn-primary" href="#about">Read about this project</a>
     </section>
     </div>
@@ -210,12 +214,12 @@
       <p class="lede">Emotion Journal is a reflective journal for quickly documenting emotional reactions to events and discovering patterns across time.</p>
 
       <section class="loop" aria-labelledby="loop-title">
-        <h2 id="loop-title">How AI participates</h2>
+        <h2 id="loop-title">How the journal takes part</h2>
         <ol class="loop-steps">
           <li><span class="who">You capture</span><span class="what">a moment in your own words</span></li>
-          <li class="ai"><span class="who">AI interprets</span><span class="what">possible emotion, context and trigger</span></li>
+          <li class="ai"><span class="who">The journal interprets</span><span class="what">possible emotion, context and trigger</span></li>
           <li><span class="who">You correct</span><span class="what">every interpretation remains editable</span></li>
-          <li class="ai"><span class="who">AI compares</span><span class="what">possible patterns emerge across your history</span></li>
+          <li class="ai"><span class="who">The journal compares</span><span class="what">possible patterns emerge across your history</span></li>
           <li><span class="who">You reflect</span><span class="what">patterns are hypotheses, not conclusions</span></li>
         </ol>
   

@@ -32,6 +32,8 @@ Journal, History and Patterns are sections of one continuous page, so the whole 
 4. **Compare.** The Patterns section looks across entries for possible recurring relationships. It also keeps the original prototype's two visualisations, rebuilt in D3: a monthly calendar where each day is a set of concentric ink-blot rings (one per entry), and a daily view that places each entry in a two-hour column by how pleasant it felt.
 5. **Reflect.** Instead of reassurance, each entry ends with one specific question to sit with.
 
+Any entry in History can collect **follow-ups** written later, so what happened next stays attached to the original moment.
+
 ## AI concept architecture
 
 The AI has three responsibilities, each kept in its own file under [`assets/js/ai/`](assets/js/ai/):
