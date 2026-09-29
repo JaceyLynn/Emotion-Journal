@@ -124,7 +124,7 @@ EJ.ai = EJ.ai || {};
 
   function intensityTrend(entries) {
     const hard = entries
-      .filter((e) => NEGATIVE.includes(e.confirmed.emotion))
+      .filter((e) => NEGATIVE.includes(e.confirmed.emotion) && e.confirmed.intensity) // feeling-only entries have no intensity
       .sort((a, b) => new Date(a.eventTime) - new Date(b.eventTime));
     if (hard.length < 6) return [];
     const mid = Math.floor(hard.length / 2);

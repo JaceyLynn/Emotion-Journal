@@ -80,6 +80,10 @@ EJ.seed = (function () {
       text: 'Talked it through with my sister and felt a bit lighter. Relieved I said something.' }
   ];
 
+  // One feeling saved on its own, as if the writer was too worked up to
+  // write. It waits in History for words.
+  const PENDING = [{ d: 1, h: 18, category: 'Work', mood: { pleasure: 16, energy: 82 } }];
+
   function build() {
     const now = new Date();
     return SAMPLES.map((s, i) => {
@@ -113,7 +117,26 @@ EJ.seed = (function () {
           return { id: `sample-${i + 1}-fu-${j + 1}`, createdAt: (at > now ? now : at).toISOString(), text: f.text, emotion: f.emotion || null };
         })
       };
-    });
+    }).concat(PENDING.map((s, i) => {
+      const when = new Date(now);
+      when.setDate(now.getDate() - s.d);
+      when.setHours(s.h, 42, 0, 0);
+      return {
+        id: 'sample-pending-' + (i + 1),
+        sample: true,
+        pending: true,
+        createdAt: when.toISOString(),
+        eventTime: when.toISOString(),
+        text: '',
+        category: s.category,
+        mood: s.mood,
+        suggested: null,
+        accuracy: null,
+        confirmed: { emotion: EJ.emotionFromMood(s.mood.pleasure, s.mood.energy), trigger: null, intensity: null, note: '' },
+        reflection: { question: 'When you come back to it: what happened just before this feeling arrived?', answer: '' },
+        followUps: []
+      };
+    }));
   }
 
   return { build };

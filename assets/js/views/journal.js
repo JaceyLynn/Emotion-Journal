@@ -7,6 +7,7 @@ EJ.views = EJ.views || {};
 EJ.views.journal = (function () {
   const $ = (id) => document.getElementById(id);
   let meter;
+  let voice;
   let draft = null; // entry being written or edited
 
   // Most visitors won't write their own entry, so the page types one out
@@ -38,6 +39,7 @@ EJ.views.journal = (function () {
     };
     if (reduced) {
       box.value = EXAMPLE;
+      fit();
       finish();
       return;
     }
@@ -47,6 +49,7 @@ EJ.views.journal = (function () {
       if (!demo.active) return;
       i += 1;
       box.value = EXAMPLE.slice(0, i);
+      fit();
       if (i < EXAMPLE.length) demo.timer = setTimeout(tick, EXAMPLE[i - 1] === ' ' ? 45 : 26);
       else finish();
     };
@@ -59,6 +62,13 @@ EJ.views.journal = (function () {
       if (items.some((it) => it.isIntersecting)) { io.disconnect(); playDemo(); }
     }, { threshold: 0.4 });
     io.observe($('entry-text'));
+  }
+
+  // The entry box grows with its text, so nothing hides under the Speak button.
+  function fit() {
+    const box = $('entry-text');
+    box.style.height = 'auto';
+    box.style.height = box.scrollHeight + 2 + 'px';
   }
 
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -75,9 +85,11 @@ EJ.views.journal = (function () {
     stopDemo(false);
     draft = null;
     $('entry-form').reset();
+    fit();
     $('entry-time').value = toLocalInput(new Date());
     $('journal-title').textContent = 'What happened?';
     $('entry-dateline').textContent = EJ.util.formatDay(new Date().toISOString());
+    if (voice) voice.stop();
     meter.clear();
     $('mood-toggle').open = false;
     $('margin-empty').hidden = false;
@@ -86,6 +98,52 @@ EJ.views.journal = (function () {
     $('form-hint').textContent = '';
     $('interpret-btn').textContent = 'Ask for a reading';
     setAccuracy(null);
+    updateFeelingFirst();
+  }
+
+  // "Save just the feeling" is for when there is no reading yet: the point
+  // must be the user's own, and there should be no words to read.
+  function updateFeelingFirst() {
+    const reading = draft && !draft.pending;
+    $('feeling-first').hidden = !!reading;
+    $('feeling-first-btn').disabled = !(meter.placedBy === 'user' && !$('entry-text').value.trim());
+  }
+
+  function keepFeeling() {
+    const mood = meter.value;
+    if (!mood || meter.placedBy !== 'user') return;
+    const form = readForm();
+    const emotion = EJ.emotionFromMood(mood.pleasure, mood.energy);
+    const entry = Object.assign({}, draft && draft.pending ? draft : {
+      id: 'entry-' + Date.now(),
+      createdAt: new Date().toISOString(),
+      followUps: []
+    }, {
+      pending: true,
+      text: '',
+      eventTime: form.eventTime,
+      category: form.category,
+      mood,
+      suggested: null,
+      accuracy: null,
+      confirmed: { emotion, trigger: null, intensity: null, note: '' },
+      reflection: { question: 'When you come back to it: what happened just before this feeling arrived?', answer: '' }
+    });
+    EJ.store.save(entry);
+    resetForm();
+    EJ.app.refresh();
+    EJ.util.toast('Feeling kept. Come back and write about it when you are ready.', { label: 'See it in History', action: () => EJ.app.openEntry(entry.id) });
+  }
+
+  // When the user moves the point after a reading, the emotion follows it.
+  function onMeterChange(value) {
+    updateFeelingFirst();
+    if (!draft || draft.pending || $('margin-note').hidden) return;
+    const emotion = EJ.emotionFromMood(value.pleasure, value.energy);
+    if ($('r-emotion').value !== emotion) {
+      $('r-emotion').value = emotion;
+      if (!draft.accuracy || draft.accuracy === 'accurate') setAccuracy('partly');
+    }
   }
 
   function setAccuracy(value) {
@@ -115,12 +173,16 @@ EJ.views.journal = (function () {
       note.classList.add('appear');
     }
     setAccuracy(entry.accuracy || null);
+    // Show where the reading's emotion sits on the Mood Meter.
+    meter.showEmotion(entry.confirmed.emotion);
+    $('mood-toggle').open = true;
+    updateFeelingFirst();
   }
 
   function readForm() {
     const text = $('entry-text').value.trim();
     const time = $('entry-time').value ? new Date($('entry-time').value) : new Date();
-    return { text, eventTime: time.toISOString(), category: $('entry-category').value, mood: meter.value };
+    return { text, eventTime: time.toISOString(), category: $('entry-category').value, mood: meter.placedBy === 'user' ? meter.value : null };
   }
 
   function interpret(ev, fromDemo) {
@@ -128,7 +190,9 @@ EJ.views.journal = (function () {
     if (!fromDemo) stopDemo(false);
     const form = readForm();
     if (form.text.length < 8) {
-      $('form-hint').textContent = 'Write a sentence or two first. The reading works from your words.';
+      $('form-hint').textContent = meter.placedBy === 'user'
+        ? 'Write a sentence or two for a reading, or save just the feeling for now.'
+        : 'Write a sentence or two first. The reading works from your words.';
       $('entry-text').focus();
       return;
     }
@@ -140,6 +204,7 @@ EJ.views.journal = (function () {
       const suggested = EJ.ai.interpret(form);
       const previous = draft;
       draft = Object.assign({}, previous || {}, form, {
+        pending: false,
         id: previous ? previous.id : 'entry-' + Date.now(),
         createdAt: previous ? previous.createdAt : new Date().toISOString(),
         suggested,
@@ -176,7 +241,7 @@ EJ.views.journal = (function () {
 
   return {
     init() {
-      meter = EJ.MoodMeter($('mood-meter'));
+      meter = EJ.MoodMeter($('mood-meter'), onMeterChange);
       fillSelect($('entry-category'), EJ.CATEGORIES.map((c) => [c, c]), 'None');
       fillSelect($('r-emotion'), Object.entries(EJ.EMOTIONS).map(([k, e]) => [k, e.label]), 'Not sure');
       fillSelect($('r-trigger'), Object.entries(EJ.TRIGGERS).map(([k, t]) => [k, t.label]), 'Something else');
@@ -186,6 +251,11 @@ EJ.views.journal = (function () {
       $('save-btn').addEventListener('click', save);
       $('discard-btn').addEventListener('click', resetForm);
       $('demo-clear').addEventListener('click', () => stopDemo(true));
+      $('feeling-first-btn').addEventListener('click', keepFeeling);
+      $('entry-text').addEventListener('input', () => { fit(); updateFeelingFirst(); });
+      // Speaking replaces the example, just like typing does.
+      $('voice-btn').addEventListener('click', () => { if (demo.active) stopDemo(true); });
+      voice = EJ.VoiceInput($('entry-text'), $('voice-btn'), (msg) => { $('form-hint').textContent = msg; });
       // Typing into the box while the example is playing replaces it.
       $('entry-text').addEventListener('keydown', () => { if (demo.active && $('entry-text').classList.contains('is-typing')) stopDemo(true); });
       document.querySelectorAll('#confirm button').forEach((b) => {
@@ -200,6 +270,7 @@ EJ.views.journal = (function () {
           if (draft && (!draft.accuracy || draft.accuracy === 'accurate')) setAccuracy('partly');
         });
       });
+      $('r-emotion').addEventListener('change', () => meter.showEmotion($('r-emotion').value));
       resetForm();
       startDemoWhenVisible();
     },
@@ -212,10 +283,25 @@ EJ.views.journal = (function () {
         return;
       }
       stopDemo(false);
+      if (entry.pending) {
+        resetForm();
+        draft = JSON.parse(JSON.stringify(entry));
+        $('journal-title').textContent = 'Come back to this feeling';
+        $('entry-dateline').textContent = EJ.util.formatDay(entry.eventTime);
+        $('entry-time').value = toLocalInput(new Date(entry.eventTime));
+        $('entry-category').value = entry.category || '';
+        meter.set(entry.mood);
+        $('mood-toggle').open = true;
+        $('form-hint').textContent = 'You kept this feeling earlier. Write what happened when you are ready.';
+        updateFeelingFirst();
+        setTimeout(() => $('entry-text').focus({ preventScroll: true }), 0);
+        return;
+      }
       draft = JSON.parse(JSON.stringify(entry));
       $('journal-title').textContent = 'Revisit an entry';
       $('entry-dateline').textContent = EJ.util.formatDay(entry.eventTime);
       $('entry-text').value = entry.text;
+      fit();
       $('entry-time').value = toLocalInput(new Date(entry.eventTime));
       $('entry-category').value = entry.category || '';
       if (entry.mood) { meter.set(entry.mood); $('mood-toggle').open = true; } else { meter.clear(); }

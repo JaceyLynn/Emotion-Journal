@@ -22,7 +22,7 @@ EJ.views.patterns = (function () {
         <p class="hypothesis-text">${u.esc(p.text)}</p>
         <details class="evidence">
           <summary>Based on ${p.evidence.length} entries</summary>
-          <ul>${evidence.map((e) => `<li><a href="#history" data-open-entry="${u.esc(e.id)}">${u.esc(u.formatShort(e.eventTime))}</a> ${u.esc(e.text.length > 110 ? e.text.slice(0, 110) + '…' : e.text)}</li>`).join('')}</ul>
+          <ul>${evidence.map((e) => `<li><a href="#history" data-open-entry="${u.esc(e.id)}">${u.esc(u.formatShort(e.eventTime))}</a> ${u.esc(!e.text ? 'Only the feeling so far.' : e.text.length > 110 ? e.text.slice(0, 110) + '…' : e.text)}</li>`).join('')}</ul>
         </details>
         <fieldset class="confirm confirm-inline">
           <legend>Does this connection feel meaningful to you?</legend>
@@ -54,7 +54,7 @@ EJ.views.patterns = (function () {
 
   function showTip(ev, e) {
     const t = tooltip();
-    t.innerHTML = `<strong>${u.esc(u.emotionLabel(e.confirmed.emotion))}</strong> · ${u.esc(u.formatShort(e.eventTime))}, ${u.esc(u.formatTime(e.eventTime))}<br>${u.esc(e.text.length > 120 ? e.text.slice(0, 120) + '…' : e.text)}`;
+    t.innerHTML = `<strong>${u.esc(u.emotionLabel(e.confirmed.emotion))}</strong> · ${u.esc(u.formatShort(e.eventTime))}, ${u.esc(u.formatTime(e.eventTime))}<br>${u.esc(!e.text ? 'Only the feeling so far.' : e.text.length > 120 ? e.text.slice(0, 120) + '…' : e.text)}`;
     t.hidden = false;
     const x = Math.min(ev.clientX + 14, window.innerWidth - t.offsetWidth - 12);
     t.style.left = x + 'px';

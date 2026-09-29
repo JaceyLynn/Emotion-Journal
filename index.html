@@ -42,8 +42,14 @@
 
           <form id="entry-form" novalidate>
             <label class="sr-only" for="entry-text">Describe what happened and what you felt</label>
-            <textarea id="entry-text" class="entry-text" rows="3"
-              placeholder="Describe what happened, and what you felt. A few sentences is enough."></textarea>
+            <div class="entry-box">
+              <textarea id="entry-text" class="entry-text" rows="3"
+                placeholder="Describe what happened, and what you felt. A few sentences is enough, typed or spoken."></textarea>
+              <button type="button" class="voice-btn" id="voice-btn" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"></path></svg>
+                <span class="voice-label">Speak</span>
+              </button>
+            </div>
             <p class="demo-note" id="demo-note" hidden>
               <span>An example entry, written for you to explore.</span>
               <button type="button" class="link-btn" id="demo-clear">Write your own instead</button>
@@ -63,10 +69,14 @@
             <details class="mood-toggle" id="mood-toggle">
               <summary>
                 <span class="mt-swatch" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                <span class="mt-text"><strong>Not sure how to name it?</strong> Locate the feeling instead.</span>
+                <span class="mt-text"><strong>Not sure how to name it?</strong> Locate the feeling instead.<span class="mt-sub">Too much to write right now? Save just the feeling and come back to it.</span></span>
                 <span class="mt-action" aria-hidden="true"></span>
               </summary>
               <div id="mood-meter"></div>
+              <div class="feeling-first" id="feeling-first">
+                <p>Too much to put into words right now? Keep just the feeling. It waits in History until you are ready to write.</p>
+                <button type="button" class="btn btn-small" id="feeling-first-btn" disabled>Save just the feeling</button>
+              </div>
             </details>
 
             <div class="form-actions">
@@ -269,6 +279,7 @@
   <script src="assets/js/seed.js"></script>
   <script src="assets/js/store.js"></script>
   <script src="assets/js/moodMeter.js"></script>
+  <script src="assets/js/voiceInput.js"></script>
   <script src="assets/js/views/journal.js"></script>
   <script src="assets/js/views/history.js"></script>
   <script src="assets/js/views/patterns.js"></script>

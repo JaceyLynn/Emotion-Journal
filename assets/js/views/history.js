@@ -68,7 +68,31 @@ EJ.views.history = (function () {
       </section>`;
   }
 
+  // A feeling saved on its own, waiting for words.
+  function pendingItem(e) {
+    const c = e.confirmed;
+    const word = e.mood ? EJ.moodWord(e.mood.pleasure, e.mood.energy) : u.emotionLabel(c.emotion);
+    const color = e.mood ? EJ.moodColor(e.mood.pleasure, e.mood.energy) : u.emotionColor(c.emotion);
+    return `
+      <li class="entry entry-pending" id="entry-${u.esc(e.id)}" style="--mark:${color}">
+        <div class="entry-date">
+          <span class="entry-day">${u.esc(u.formatShort(e.eventTime))}</span>
+          <span class="entry-time">${u.esc(u.formatTime(e.eventTime))}</span>
+        </div>
+        <div class="entry-body">
+          <p class="pending-text"><span class="pending-dot" aria-hidden="true"></span>Only the feeling so far: somewhere near <strong>${u.esc(word.toLowerCase())}</strong>.</p>
+          <div class="chips">
+            ${chip(u.emotionLabel(c.emotion), u.emotionColor(c.emotion))}
+            ${e.category ? chip(e.category) : ''}
+            <button type="button" class="btn btn-small btn-primary" data-edit-entry="${u.esc(e.id)}">Write about it</button>
+            <button type="button" class="btn btn-small btn-quiet" data-delete="${u.esc(e.id)}">Delete</button>
+          </div>
+        </div>
+      </li>`;
+  }
+
   function item(e, all) {
+    if (e.pending) return pendingItem(e);
     const c = e.confirmed;
     const nFollow = (e.followUps || []).length;
 
@@ -129,7 +153,8 @@ EJ.views.history = (function () {
     if (openId) {
       const el = document.getElementById('entry-' + openId);
       if (el) {
-        el.querySelector('details').open = true;
+        const d = el.querySelector('details');
+        if (d) d.open = true;
         el.classList.add('highlight');
         setTimeout(() => el.scrollIntoView({ block: 'center' }), 0);
       }

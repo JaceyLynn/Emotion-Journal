@@ -26,8 +26,8 @@ So the AI is framed as a hypothesis generator, not an authority. Its language st
 
 Journal, History and Patterns are sections of one continuous page, so the whole loop reads top to bottom. About is a separate view that explains the concept and what is simulated.
 
-1. **Capture.** Describe what happened, when, and optionally its context. If the feeling is hard to name, the Mood Meter lets you locate it on pleasure and energy instead.
-2. **Interpret.** A margin note proposes a possible emotion, possible trigger, intensity and a short observation.
+1. **Capture.** Describe what happened, when, and optionally its context, by typing or by speaking (voice input uses the browser's own speech recognition where available). If the feeling is hard to name, the Mood Meter lets you locate it on a colour field of pleasure and energy instead. If it is too strong to write about yet, you can save just the feeling and come back to write about it later; it waits in History.
+2. **Interpret.** A margin note proposes a possible emotion, possible trigger, intensity and a short observation. The Mood Meter shows where that emotion sits, and moving the point changes the emotion.
 3. **Confirm.** You answer *Feels accurate*, *Partly accurate* or *Not how I see it*. Every label stays editable, and you can add your own words.
 4. **Compare.** The Patterns section looks across entries for possible recurring relationships. It also keeps the original prototype's two visualisations, rebuilt in D3: a monthly calendar where each day is a set of concentric ink-blot rings (one per entry), and a daily view that places each entry in a two-hour column by how pleasant it felt.
 5. **Reflect.** Instead of reassurance, each entry ends with one specific question to sit with.
@@ -105,6 +105,7 @@ assets/js/
   seed.js               fictional sample journal
   store.js              localStorage persistence
   moodMeter.js          pleasure/energy picker
+  voiceInput.js         speech-to-text for the entry box
   views/                Journal, History and Patterns sections
   app.js                page navigation (one scroll plus About)
 assets/vendor/d3.min.js D3 v7 (ISC licence)

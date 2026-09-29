@@ -7,7 +7,7 @@
 window.EJ = window.EJ || {};
 
 EJ.store = (function () {
-  const KEYS = { entries: 'ej.v4.entries', patterns: 'ej.v4.patternResponses' };
+  const KEYS = { entries: 'ej.v5.entries', patterns: 'ej.v5.patternResponses' };
   const memory = {};
 
   function read(key, fallback) {
