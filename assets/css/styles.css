@@ -1,5 +1,6 @@
 /* Emotion Journal: personal journal × editorial publication × quiet data visualization.
-   One rounded sans typeface throughout, soft corners and warm paper tones. */
+   Edu SA Hand for big titles, Inter (extra light and regular) for everything
+   else, soft corners and warm paper tones. */
 
 :root {
   color-scheme: light; /* a deliberately single, paper-light theme */
@@ -17,8 +18,10 @@
   --radius: 18px;
   --radius-sm: 12px;
   --shadow: 0 1px 2px rgba(92, 64, 40, 0.06), 0 6px 20px rgba(92, 64, 40, 0.06);
-  --display: 'Nunito', 'Varela Round', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
-  --sans: 'Nunito', 'Varela Round', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+  --display: 'Edu SA Hand', 'Segoe Print', 'Bradley Hand', cursive;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --light: 200;   /* Inter extra light: running text */
+  --regular: 400; /* Inter regular: labels, controls, emphasis */
   --measure: 38rem;
   --page: 70rem;
 }
@@ -72,8 +75,7 @@ a:hover { text-decoration-thickness: 2px; }
 .wordmark {
   font-family: var(--display);
   font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-weight: 400;
   text-decoration: none;
 }
 
@@ -113,20 +115,17 @@ main { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem 4rem; }
 
 .display {
   font-family: var(--display);
-  font-weight: 800;
+  font-weight: 400;
   font-size: clamp(2.4rem, 6.5vw, 4.25rem);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
   margin: 0 0 1.5rem;
 }
-.display em { font-style: normal; font-weight: 600; color: var(--margin-ink); }
 
 .view-title {
   font-family: var(--display);
-  font-weight: 800;
-  font-size: clamp(2rem, 4.5vw, 2.6rem);
-  line-height: 1.1;
-  letter-spacing: -0.015em;
+  font-weight: 400;
+  font-size: clamp(2.1rem, 4.5vw, 2.75rem);
+  line-height: 1.15;
   margin: 0 0 1rem;
 }
 
@@ -134,7 +133,7 @@ main { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem 4rem; }
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 400;
   margin: 3rem 0 1.25rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--rule-strong);
@@ -154,7 +153,7 @@ main { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem 4rem; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font: 700 0.9375rem/1 var(--sans);
+  font: 400 0.9375rem/1 var(--sans);
   padding: 0.85rem 1.4rem;
   border: 1px solid var(--ink);
   border-radius: 999px;
@@ -172,43 +171,45 @@ main { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem 4rem; }
 .btn-quiet:hover { background: transparent; text-decoration-thickness: 2px; }
 .btn-small { font-size: 0.8125rem; padding: 0.5rem 0.8rem; }
 
-/* ---------- home ---------- */
+/* ---------- intro and sections ---------- */
 
-.hero { padding: clamp(3rem, 9vw, 6rem) 0 3rem; max-width: 52rem; }
-.cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.intro { padding: clamp(2.5rem, 7vw, 4.5rem) 0 0.5rem; max-width: 52rem; }
+.block { padding-top: clamp(3rem, 7vw, 5rem); scroll-margin-top: 0.5rem; }
+.block + .block { margin-top: 1rem; border-top: 1px solid var(--rule); }
 
-.principle { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem 1.75rem; }
-.principle-line { font-family: var(--display); font-size: 1.75rem; font-weight: 800; margin: 0; }
-.principle-line em { color: var(--margin-ink); }
+/* ---------- how AI participates (About) ---------- */
 
 .loop-steps {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
 }
 .loop-steps li {
-  padding: 1rem 1.1rem 1.25rem;
+  padding: 1rem 1.1rem;
   background: var(--card);
   border-radius: var(--radius);
   counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
 }
 .loop-steps li::before {
   content: counter(step, decimal-leading-zero);
   display: block;
   font-size: 0.875rem;
-  font-weight: 800;
+  font-weight: 400;
   color: var(--muted);
-  margin-bottom: 1.5rem;
+  grid-row: span 2;
 }
 .loop-steps .who {
   display: block;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 0.35rem;
 }
 .loop-steps .what { font-size: 1rem; line-height: 1.4; }
@@ -226,7 +227,7 @@ main { max-width: var(--page); margin: 0 auto; padding: 0 1.5rem 4rem; }
 
 .entry-text {
   width: 100%;
-  font-family: var(--display);
+  font-family: var(--sans);
   font-size: 1.25rem;
   line-height: 1.6;
   color: var(--ink);
@@ -288,7 +289,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .mood-toggle summary::-webkit-details-marker { display: none; }
 .mood-toggle summary::before { content: '+'; display: inline-block; width: 1.25rem; color: var(--muted); }
 .mood-toggle[open] summary::before { content: '–'; }
-.mood-toggle summary em { font-style: normal; font-weight: 700; color: var(--margin-ink); }
+.mood-toggle summary em { font-style: normal; font-weight: 400; color: var(--margin-ink); }
 
 .form-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
 .form-hint { font-size: 0.875rem; color: var(--muted); }
@@ -307,21 +308,21 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .mm-axis-y { grid-area: y; writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; }
 .mm-axis-x { grid-area: x; text-align: center; }
 .mm-readout { grid-area: read; margin: 0.25rem 0 0; font-size: 0.9375rem; }
-.mm-readout em { font-style: normal; font-weight: 800; color: var(--margin-ink); }
+.mm-readout em { font-style: normal; font-weight: 400; color: var(--margin-ink); }
 .mm-q1 { fill: #b4553c; opacity: 0.12; }
 .mm-q2 { fill: #c99a2e; opacity: 0.14; }
 .mm-q3 { fill: #4d6c8c; opacity: 0.12; }
 .mm-q4 { fill: #5b8a74; opacity: 0.13; }
 .mm-rule { stroke: var(--paper); stroke-width: 3; }
-.mm-corner { font: 600 12px var(--display); fill: var(--muted); }
+.mm-corner { font: 400 12px var(--sans); fill: var(--muted); }
 .mm-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
 
 /* margin note: the AI as a second reader */
 
 .margin { background: var(--margin-wash); border-radius: var(--radius); padding: 1.5rem 1.5rem 1.75rem; align-self: start; position: sticky; top: 1.5rem; }
 .margin-kicker {
-  font-family: var(--display);
-  font-weight: 800;
+  font-family: var(--sans);
+  font-weight: 400;
   font-size: 1.0625rem;
   color: var(--margin-ink);
   margin: 0 0 1rem;
@@ -334,7 +335,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 .note-field { display: grid; gap: 0.15rem; margin-bottom: 1rem; }
 .margin-note .note-label { color: var(--margin-ink); opacity: 0.8; }
-.margin-note select { font-size: 1.125rem; font-weight: 700; color: var(--margin-ink); width: 100%; background-color: rgba(255, 250, 243, 0.6); border-color: transparent; }
+.margin-note select { font-size: 1.125rem; font-weight: 400; color: var(--margin-ink); width: 100%; background-color: rgba(255, 250, 243, 0.6); border-color: transparent; }
 .margin-note select:hover, .margin-note.is-revising select { border-color: var(--rule-strong); background-color: var(--card); }
 .noticed { font-size: 1.0625rem; line-height: 1.55; margin: 0.25rem 0 0; }
 
@@ -349,7 +350,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .confirm-options { display: flex; flex-direction: column; gap: 0.4rem; }
 .confirm-options button {
-  font: 700 0.875rem/1.2 var(--sans);
+  font: 400 0.875rem/1.2 var(--sans);
   text-align: left;
   padding: 0.65rem 1rem;
   background: var(--card);
@@ -369,9 +370,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 .reflection { margin-top: 2.5rem; padding: 1.5rem 1.5rem 1.75rem; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); animation: appear 0.6s ease both; }
 .reflection-q {
-  font-family: var(--display);
+  font-family: var(--sans);
   font-size: clamp(1.3rem, 3vw, 1.6rem);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.35;
   margin: 0 0 1.25rem;
   max-width: 34rem;
@@ -384,7 +385,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 
 .filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0 1.5rem; }
 .filters button {
-  font: 700 0.8125rem/1 var(--sans);
+  font: 400 0.8125rem/1 var(--sans);
   padding: 0.5rem 0.85rem;
   background: var(--card);
   color: var(--ink);
@@ -411,13 +412,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .entry.highlight { box-shadow: 0 0 0 2px var(--mark), var(--shadow); }
 .entry-date { display: grid; align-content: start; gap: 0.1rem; padding-top: 0.2rem; }
-.entry-day { font-size: 1.125rem; font-weight: 800; }
+.entry-day { font-size: 1.125rem; font-weight: 400; }
 .entry-time { font-size: 0.8125rem; color: var(--muted); }
 
 .entry-body summary { list-style: none; cursor: pointer; display: grid; gap: 0.35rem; }
 .entry-body summary::-webkit-details-marker { display: none; }
-.entry-emotion { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
-.tag { font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 0.8125rem; color: var(--margin-ink); background: var(--margin-wash); border-radius: 999px; padding: 0.15rem 0.6rem; }
+.entry-emotion { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+.tag { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 0.8125rem; color: var(--margin-ink); background: var(--margin-wash); border-radius: 999px; padding: 0.15rem 0.6rem; }
 .entry-text-preview {
   font-size: 1.125rem;
   line-height: 1.55;
@@ -447,9 +448,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .ai-original { color: var(--margin-ink); background: var(--margin-wash); border-radius: var(--radius-sm); padding: 0.75rem 1rem; }
 .ai-original .note-label { color: var(--margin-ink); }
 .your-words { margin: 0; }
-.your-words p:last-child { font-size: 1.0625rem; font-weight: 600; }
+.your-words p:last-child { font-size: 1.0625rem; font-weight: 400; }
 .small-q { font-size: 1.0625rem; margin: 0.2rem 0 0.4rem; }
 .entry-actions { display: flex; gap: 0.5rem; align-items: center; }
+.show-all { list-style: none; display: flex; justify-content: center; padding-top: 0.5rem; }
 .empty { padding: 2rem 0; color: var(--muted); list-style: none; }
 
 /* ---------- patterns ---------- */
@@ -458,13 +460,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .hypothesis { padding: 1.25rem 1.4rem 1.5rem; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border-top: 5px solid var(--mark); }
 .hypothesis .eyebrow { display: flex; align-items: center; gap: 0.5rem; }
 .hypothesis .eyebrow::before { content: ''; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--mark); }
-.hypothesis-text { font-size: 1.1875rem; font-weight: 700; line-height: 1.4; margin: 0 0 0.75rem; }
+.hypothesis-text { font-size: 1.1875rem; font-weight: 400; line-height: 1.4; margin: 0 0 0.75rem; }
 .evidence summary { cursor: pointer; font-size: 0.8125rem; color: var(--muted); }
 .evidence ul { padding-left: 1rem; margin: 0.5rem 0 0; font-size: 0.875rem; color: var(--ink-soft); }
 .evidence li { margin-bottom: 0.35rem; }
 .confirm-inline .confirm-options { flex-direction: row; flex-wrap: wrap; }
 .confirm-inline .confirm-options button { min-width: 4.5rem; text-align: center; }
-.confirm-inline legend { text-transform: none; letter-spacing: 0; font-weight: 700; font-size: 0.9375rem; color: var(--margin-ink); }
+.confirm-inline legend { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 0.9375rem; color: var(--margin-ink); }
 .set-aside { margin-top: 1rem; }
 .set-aside summary { cursor: pointer; font-size: 0.875rem; color: var(--muted); padding: 0.5rem 0; }
 .set-aside .hypothesis { opacity: 0.65; }
@@ -473,7 +475,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 .legend > span { display: inline-flex; align-items: center; gap: 0.4rem; }
 
 .chart { margin: 0 0 1.25rem; padding: 1.25rem 1.4rem 1.4rem; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
-.chart figcaption { font-size: 1.125rem; font-weight: 800; margin-bottom: 0.75rem; }
+.chart figcaption { font-size: 1.125rem; font-weight: 400; margin-bottom: 0.75rem; }
 .chart-body { width: 100%; }
 .chart-body svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 .chart-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
@@ -506,9 +508,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 /* calendar and daily view */
 
 .chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.month-nav { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; }
+.month-nav { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 400; }
 .month-nav button {
-  font: 700 1rem/1 var(--sans);
+  font: 400 1rem/1 var(--sans);
   width: 2.25rem; height: 2.25rem;
   border-radius: 50%;
   border: 1px solid var(--rule);
@@ -520,7 +522,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 #month-label { min-width: 9rem; text-align: center; }
 .chart-note { font-size: 0.8125rem; color: var(--muted); margin: 0.5rem 0 0; }
 
-.cal-num { font: 700 12px var(--sans); fill: var(--muted); }
+.cal-num { font: 400 12px var(--sans); fill: var(--muted); }
 .cal-empty { fill: none; stroke: var(--rule-strong); stroke-width: 1; }
 .cal-ring { fill: transparent; stroke: transparent; stroke-width: 2; }
 .cal-day.has-entries { cursor: pointer; outline: none; }
@@ -536,12 +538,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 /* ---------- about ---------- */
 
 .prose { max-width: var(--measure); padding-top: 2.5rem; }
-.prose h2 { font-weight: 800; font-size: 1.375rem; margin: 2.5rem 0 0.75rem; }
+.prose h2 { font-family: var(--display); font-weight: 400; font-size: 1.75rem; line-height: 1.2; margin: 2.5rem 0 0.75rem; }
 .prose p { font-size: 1.0625rem; line-height: 1.7; }
 .prose .lede { font-size: 1.25rem; }
 .prose code { font-size: 0.9em; background: var(--paper-deep); padding: 0.1em 0.4em; border-radius: 6px; }
 .roles { margin: 0; }
-.roles dt { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-top: 1.25rem; color: var(--margin-ink); }
+.roles dt { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400; margin-top: 1.25rem; color: var(--margin-ink); }
 .roles dd { margin: 0.25rem 0 0; font-size: 1.0625rem; line-height: 1.6; }
 .about-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 2.5rem; }
 
@@ -566,14 +568,20 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px
 }
 .toast a { color: var(--paper); margin-left: 0.5rem; }
 
+/* Inter extra light for running text, regular for everything smaller or interactive */
+.lede, .entry-text, .noticed, .reflection-q, .prose p, .roles dd, .hypothesis-text,
+.entry-text-preview, .your-words p:last-child, .loop-steps .what, .margin-empty p:not(.margin-kicker),
+.reflection textarea, .margin-note select {
+  font-weight: var(--light);
+}
+.lede, .prose p, .roles dd { color: var(--ink); }
+strong, b { font-weight: var(--regular); }
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 860px) {
   .page { grid-template-columns: 1fr; gap: 2rem; }
   .margin { position: static; }
-  .loop-steps { grid-template-columns: 1fr; gap: 0.5rem; }
-  .loop-steps li { padding: 1rem 1.1rem; display: grid; grid-template-columns: 2.5rem 1fr; }
-  .loop-steps li::before { margin: 0; grid-row: span 2; }
   .chart-row { grid-template-columns: 1fr; gap: 0; }
   .confirm-options { flex-direction: row; flex-wrap: wrap; }
 }

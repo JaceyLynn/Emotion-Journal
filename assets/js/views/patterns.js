@@ -22,7 +22,7 @@ EJ.views.patterns = (function () {
         <p class="hypothesis-text">${u.esc(p.text)}</p>
         <details class="evidence">
           <summary>Based on ${p.evidence.length} entries</summary>
-          <ul>${evidence.map((e) => `<li><a href="#/history/${encodeURIComponent(e.id)}">${u.esc(u.formatShort(e.eventTime))}</a> ${u.esc(e.text.length > 110 ? e.text.slice(0, 110) + '…' : e.text)}</li>`).join('')}</ul>
+          <ul>${evidence.map((e) => `<li><a href="#history" data-open-entry="${u.esc(e.id)}">${u.esc(u.formatShort(e.eventTime))}</a> ${u.esc(e.text.length > 110 ? e.text.slice(0, 110) + '…' : e.text)}</li>`).join('')}</ul>
         </details>
         <fieldset class="confirm confirm-inline">
           <legend>Does this connection feel meaningful to you?</legend>
@@ -79,8 +79,8 @@ EJ.views.patterns = (function () {
       .on('pointerleave', hideTip)
       .on('focus', function (ev, e) { const r = this.getBoundingClientRect(); showTip({ clientX: r.right, clientY: r.bottom }, e); })
       .on('blur', hideTip)
-      .on('click', (ev, e) => { hideTip(); location.hash = '#/history/' + encodeURIComponent(e.id); })
-      .on('keydown', (ev, e) => { if (ev.key === 'Enter') { hideTip(); location.hash = '#/history/' + encodeURIComponent(e.id); } });
+      .on('click', (ev, e) => { hideTip(); EJ.app.openEntry(e.id); })
+      .on('keydown', (ev, e) => { if (ev.key === 'Enter') { hideTip(); EJ.app.openEntry(e.id); } });
   }
 
   // ---------- monthly calendar (ported from the original p5.js Monthly Mood) ----------
@@ -244,8 +244,8 @@ EJ.views.patterns = (function () {
       .on('pointerenter', showTip).on('pointermove', showTip).on('pointerleave', hideTip)
       .on('focus', function (ev, e) { const b = this.getBoundingClientRect(); showTip({ clientX: b.right, clientY: b.bottom }, e); })
       .on('blur', hideTip)
-      .on('click', (ev, e) => { hideTip(); location.hash = '#/history/' + encodeURIComponent(e.id); })
-      .on('keydown', (ev, e) => { if (ev.key === 'Enter') { hideTip(); location.hash = '#/history/' + encodeURIComponent(e.id); } });
+      .on('click', (ev, e) => { hideTip(); EJ.app.openEntry(e.id); })
+      .on('keydown', (ev, e) => { if (ev.key === 'Enter') { hideTip(); EJ.app.openEntry(e.id); } });
   }
 
   function selectDay(key) {
@@ -312,7 +312,7 @@ EJ.views.patterns = (function () {
         <span class="trigger-name">${u.esc(u.triggerLabel(t))}</span>
         <span class="trigger-dots" aria-label="${list.length} entries">${list
           .sort((a, b) => a.confirmed.emotion > b.confirmed.emotion ? 1 : -1)
-          .map((e) => `<a class="tdot" href="#/history/${encodeURIComponent(e.id)}" style="background:${u.emotionColor(e.confirmed.emotion)}" title="${u.esc(u.emotionLabel(e.confirmed.emotion))}, ${u.esc(u.formatShort(e.eventTime))}"></a>`).join('')}</span>
+          .map((e) => `<a class="tdot" href="#history" data-open-entry="${u.esc(e.id)}" style="background:${u.emotionColor(e.confirmed.emotion)}" title="${u.esc(u.emotionLabel(e.confirmed.emotion))}, ${u.esc(u.formatShort(e.eventTime))}"></a>`).join('')}</span>
       </li>`).join('')}</ol>`;
   }
 
@@ -338,7 +338,7 @@ EJ.views.patterns = (function () {
   let resizeTimer;
   return {
     init() {
-      document.getElementById('view-patterns').addEventListener('click', (ev) => {
+      document.getElementById('patterns').addEventListener('click', (ev) => {
         const b = ev.target.closest('button[data-pattern]');
         if (!b) return;
         EJ.store.respondToPattern(b.dataset.pattern, b.dataset.answer);
@@ -349,7 +349,7 @@ EJ.views.patterns = (function () {
       $('next-month').addEventListener('click', () => shiftMonth(1));
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => { if (!$('view-patterns').hidden) renderCharts(); }, 150);
+        resizeTimer = setTimeout(() => { if (!$('scroll-view').hidden) renderCharts(); }, 150);
       });
     },
     show() {

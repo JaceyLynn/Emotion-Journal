@@ -14,9 +14,11 @@ EJ.util = {
   formatTime(iso) {
     return new Date(iso).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
   },
-  toast(message, link) {
+  // Shows a short message, optionally with one action button.
+  toast(message, action) {
     const el = document.getElementById('toast');
-    el.innerHTML = EJ.util.esc(message) + (link ? ` <a href="${link.href}">${EJ.util.esc(link.label)}</a>` : '');
+    el.innerHTML = EJ.util.esc(message) + (action ? ` <button type="button">${EJ.util.esc(action.label)}</button>` : '');
+    if (action) el.querySelector('button').addEventListener('click', () => { el.hidden = true; action.action(); });
     el.hidden = false;
     clearTimeout(EJ.util._toastTimer);
     EJ.util._toastTimer = setTimeout(() => { el.hidden = true; }, 4000);

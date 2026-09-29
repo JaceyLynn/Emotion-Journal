@@ -7,19 +7,19 @@
   <meta name="description" content="An AI-assisted emotional journal that helps people notice recurring patterns in their reactions while keeping interpretation in human hands.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@400&family=Inter:wght@200;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="masthead">
-    <a class="wordmark" href="#/">Emotion Journal</a>
+    <a class="wordmark" href="#journal">Emotion Journal</a>
     <nav class="nav" aria-label="Main">
-      <a href="#/journal" data-view="journal">Journal</a>
-      <a href="#/history" data-view="history">History</a>
-      <a href="#/patterns" data-view="patterns">Patterns</a>
-      <a href="#/about" data-view="about">About</a>
+      <a href="#journal" data-view="journal">Journal</a>
+      <a href="#history" data-view="history">History</a>
+      <a href="#patterns" data-view="patterns">Patterns</a>
+      <a href="#about" data-view="about">About</a>
     </nav>
   </header>
 
@@ -27,40 +27,18 @@
 
   <main id="main">
 
-    <!-- HOME -->
-    <section class="view" id="view-home" hidden>
-      <div class="hero">
-        <p class="eyebrow">A reflective journal</p>
-        <h1 class="display">Notice what happened.<br><em>Notice what repeats.</em></h1>
-        <p class="lede">A journal that uses AI to help interpret emotional reactions and surface possible patterns over time, while leaving the final interpretation with you.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#/journal">Start an entry</a>
-          <a class="btn" href="#/history">Explore sample journal</a>
-        </div>
-      </div>
-
-      <section class="principle">
-        <p class="principle-line">AI suggests. <em>You decide.</em></p>
-      </section>
-
-      <section class="loop" aria-labelledby="loop-title">
-        <h2 id="loop-title" class="section-title">How AI participates</h2>
-        <ol class="loop-steps">
-          <li><span class="who">You capture</span><span class="what">a moment in your own words</span></li>
-          <li class="ai"><span class="who">AI interprets</span><span class="what">possible emotion, context and trigger</span></li>
-          <li><span class="who">You correct</span><span class="what">every interpretation remains editable</span></li>
-          <li class="ai"><span class="who">AI compares</span><span class="what">possible patterns emerge across your history</span></li>
-          <li><span class="who">You reflect</span><span class="what">patterns are hypotheses, not conclusions</span></li>
-        </ol>
-      </section>
-    </section>
+    <div id="scroll-view">
+    <header class="intro">
+      <h1 class="display">Notice what happened.<br>Notice what repeats.</h1>
+      <p class="lede">A journal that uses AI to help interpret emotional reactions and surface possible patterns over time, while leaving the final interpretation with you.</p>
+    </header>
 
     <!-- JOURNAL -->
-    <section class="view" id="view-journal" hidden>
+    <section class="block" id="journal" aria-labelledby="journal-title">
       <div class="page">
         <div class="page-main">
           <p class="eyebrow" id="entry-dateline"></p>
-          <h1 class="view-title" id="journal-title">What happened?</h1>
+          <h2 class="view-title" id="journal-title">What happened?</h2>
 
           <form id="entry-form" novalidate>
             <label class="sr-only" for="entry-text">Describe what happened and what you felt</label>
@@ -150,9 +128,9 @@
     </section>
 
     <!-- HISTORY -->
-    <section class="view" id="view-history" hidden>
+    <section class="block" id="history" aria-labelledby="history-title">
       <header class="view-head">
-        <h1 class="view-title">History</h1>
+        <h2 class="view-title" id="history-title">History</h2>
         <p class="lede">Each entry keeps your version of the reading. Where you corrected the AI, both are kept, so you can see what changed.</p>
       </header>
       <div class="filters" id="history-filters" role="group" aria-label="Filter by emotion"></div>
@@ -161,14 +139,14 @@
     </section>
 
     <!-- PATTERNS -->
-    <section class="view" id="view-patterns" hidden>
+    <section class="block" id="patterns" aria-labelledby="patterns-title">
       <header class="view-head">
-        <h1 class="view-title">Patterns</h1>
+        <h2 class="view-title" id="patterns-title">Patterns</h2>
         <p class="lede">Not “this is your pattern”. Just some things that may be worth noticing, drawn from the version of each entry you confirmed.</p>
       </header>
 
       <section aria-labelledby="hyp-title">
-        <h2 class="section-title" id="hyp-title">Possible patterns</h2>
+        <h3 class="section-title" id="hyp-title">Possible patterns</h3>
         <ol class="hypotheses" id="hypotheses"></ol>
         <details class="set-aside" id="set-aside" hidden>
           <summary>Set aside by you</summary>
@@ -177,7 +155,7 @@
       </section>
 
       <section class="charts" aria-labelledby="charts-title">
-        <h2 class="section-title" id="charts-title">Across your entries</h2>
+        <h3 class="section-title" id="charts-title">Across your entries</h3>
         <div class="legend" id="legend"></div>
         <figure class="chart chart-calendar">
           <div class="chart-head">
@@ -209,12 +187,24 @@
       </section>
       <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
     </section>
+    </div>
 
     <!-- ABOUT -->
-    <section class="view prose" id="view-about" hidden>
+    <section class="prose" id="about" hidden>
       <h1 class="view-title">About this project</h1>
 
       <p class="lede">Emotion Journal is a reflective journal for quickly documenting emotional reactions to events and discovering patterns across time.</p>
+
+      <section class="loop" aria-labelledby="loop-title">
+        <h2 id="loop-title">How AI participates</h2>
+        <ol class="loop-steps">
+          <li><span class="who">You capture</span><span class="what">a moment in your own words</span></li>
+          <li class="ai"><span class="who">AI interprets</span><span class="what">possible emotion, context and trigger</span></li>
+          <li><span class="who">You correct</span><span class="what">every interpretation remains editable</span></li>
+          <li class="ai"><span class="who">AI compares</span><span class="what">possible patterns emerge across your history</span></li>
+          <li><span class="who">You reflect</span><span class="what">patterns are hypotheses, not conclusions</span></li>
+        </ol>
+  
 
       <h2>The design question</h2>
       <p>The question here is not <em>how AI can tell someone what they are feeling</em>. It is <strong>how AI can help someone notice patterns in their own experience while preserving their authority over interpretation.</strong></p>

@@ -116,7 +116,8 @@ EJ.views.journal = (function () {
     EJ.store.save(draft);
     const id = draft.id;
     resetForm();
-    EJ.util.toast('Kept in your journal.', { href: '#/history/' + encodeURIComponent(id), label: 'See it in History' });
+    EJ.app.refresh();
+    EJ.util.toast('Kept in your journal.', { label: 'See it in History', action: () => EJ.app.openEntry(id) });
   }
 
   return {

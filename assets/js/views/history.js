@@ -8,7 +8,9 @@ EJ.views = EJ.views || {};
 EJ.views.history = (function () {
   const $ = (id) => document.getElementById(id);
   const u = EJ.util;
+  const PREVIEW = 6; // entries shown before "Show all" in the one-page scroll
   let filter = null;
+  let expanded = false;
 
   const ACCURACY = {
     accurate: 'You said the reading felt accurate.',
@@ -61,7 +63,7 @@ EJ.views.history = (function () {
               ${e.reflection.answer ? `<p>${u.esc(e.reflection.answer)}</p>` : '<p class="muted">Left as a question.</p>'}
             </div>
             <div class="entry-actions">
-              <a class="btn btn-small" href="#/journal/${encodeURIComponent(e.id)}">Revisit or edit</a>
+              <button type="button" class="btn btn-small" data-edit-entry="${u.esc(e.id)}">Revisit or edit</button>
               <button type="button" class="btn btn-small btn-quiet" data-delete="${u.esc(e.id)}">Delete</button>
             </div>
           </div>
@@ -80,8 +82,12 @@ EJ.views.history = (function () {
     const all = EJ.store.entries();
     renderFilters(all);
     const list = filter ? all.filter((e) => e.confirmed.emotion === filter) : all;
-    $('entries').innerHTML = list.length ? list.map(item).join('') :
-      '<li class="empty">Nothing here yet. <a href="#/journal">Start an entry</a>.</li>';
+    if (openId) expanded = true;
+    const shown = expanded ? list : list.slice(0, PREVIEW);
+    const more = list.length - shown.length;
+    $('entries').innerHTML = (list.length ? shown.map(item).join('') :
+      '<li class="empty">Nothing here yet. <a href="#journal">Start an entry</a>.</li>') +
+      (more > 0 ? `<li class="show-all"><button type="button" class="btn" data-show-all>Show all ${list.length} entries</button></li>` : '');
 
     const samples = all.filter((e) => e.sample).length;
     $('history-footnote').textContent = samples
@@ -107,6 +113,11 @@ EJ.views.history = (function () {
         render();
       });
       $('entries').addEventListener('click', (ev) => {
+        if (ev.target.closest('[data-show-all]')) {
+          expanded = true;
+          render();
+          return;
+        }
         const b = ev.target.closest('button[data-delete]');
         if (!b) return;
         if (!b.dataset.armed) {
@@ -115,7 +126,7 @@ EJ.views.history = (function () {
           return;
         }
         EJ.store.remove(b.dataset.delete);
-        render();
+        EJ.app.refresh();
         u.toast('Entry deleted.');
       });
     },
